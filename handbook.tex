@@ -1,22 +1,36 @@
-\documentclass[12pt,a4paper]{book}
-\usepackage[russian]{babel} 
-\usepackage[utf8x]{inputenc}
-\usepackage[T2A]{fontenc}
-\usepackage{graphicx}
-\usepackage{amstext}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{textcomp}
-\usepackage{multicol}
-\usepackage{hyperref}
-\usepackage{setspace}
-\usepackage{makeidx}
+\documentclass[12pt, a4paper]{article}
 
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage{xltxtra}
+\usepackage{xecyr}
+
+%\usepackage{polyglossia}  %% подключает пакет многоязыкой вёрстки
+\setmainfont{Liberation Serif}  %% задаёт основной шрифт документа
+\setsansfont{Liberation Sans}  %% задаёт шрифт без засечек
+\setmonofont{Droid Sans Mono}  %% задаёт моноширинный шрифт
+\defaultfontfeatures{Scale=MatchLowercase, Mapping=tex-text}  %% устанавливает поведение шрифтов по умолчанию
+%\setdefaultlanguage[spelling=modern]{russian}  %% устанавливает язык по умолчанию
+%\setotherlanguage{english}
+
+\usepackage{cmap} % чтобы был поиск по pdf
+
+% меняем размеры страницы
 \usepackage{geometry}
 \geometry{left=2.0cm}
 \geometry{right=2.0cm}
 \geometry{top=2.0cm}
 \geometry{bottom=2.5cm}
+
+% переопределяем окружение verbatim
+\makeatletter 
+\renewcommand*\verbatim@font{% 
+\normalfont\ttfamily\small 
+\hyphenchar\font\m@ne 
+\let\do\do@noligs \verbatim@nolig@list 
+} 
+\makeatother
 
 \renewcommand{\thesection}{\arabic{section}.} 
 \renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}.} 
@@ -27,15 +41,84 @@
 \begin{titlepage}
 \begin{center}
 \vspace*{10cm}
-{ 
-\rm \Huge \textbf{Handbook Calculate Linux}
+{ \rm \Huge \textbf
+	{
+		\fontspec{Ubuntu}{print(gentoo.calculate\_linux)}
+	}
 }
 \vfill 
-{\rm\textsf{ \Large 2011 г.}}
+{ \rm \large  \fontspec{Ubuntu}{2011}  }
 \end{center}
 \end{titlepage}
+
 \tableofcontents
 
-\input{text}
+\newpage
+
+\section{Установка. Обновление. Профили}
+
+\subsection{Системные требования}
+\subsection{Gentoo}
+
+\subsubsection{Gentoo. Установка}
+\subsubsection{Gentoo. Обновление}
+
+\subsection{Calculate Linux}
+
+\subsubsection{Calculate Linux. Установка}
+\subsubsection{Calculate Linux. Обновление}
+
+\subsection{Управление профилями пользователей}
+
+\newpage 
+
+\section{Работа с коммандной строкой}
+
+\subsection{Поиск файлов}
+
+\newpage
+
+\section{Менеджер пакетов}
+
+\subsection{Установка и удаление программ}
+
+\subsection{Разрешение зависимостей}
+
+\newpage
+\section{Настройка}
+
+\subsection{Настройка сети}
+
+\subsection{Настройка автозапуска}
+
+%\subsection{}
+%\subsection{}
+%\subsection{}
+%\subsection{}
+%\subsection{}
+%\subsection{}
+%\subsection{}
+
+\subsection{Персональные настройки}
+
+\subsubsection{Настройка bash}
+
+\subsubsection{Настройка vim}
+
+\newpage
+\section{Мониторинг и производительность}
+
+\subsection{Мониторинг}
+
+\subsection{Оптиммизация eix}
+
+\subsection{SSD}
+
+\subsection{Распределенная компиляция}
+
+\newpage
+
+\section{Приложение}
+
 \end{document}
 
