@@ -15,6 +15,8 @@
 %\setotherlanguage{english}
 
 \usepackage{cmap} % чтобы был поиск по pdf
+\usepackage{ucs}
+\usepackage{hyperref}
 
 % меняем размеры страницы
 \usepackage{geometry}
@@ -61,6 +63,61 @@
 \subsection{Gentoo}
 
 \subsubsection{Gentoo. Установка}
+
+Для установки необходимо скачать установочный диск с минимальным набором программ: 
+install-amd64-minimal-[...].iso
+(\href{http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/current-iso/install-amd64-minimal-20110811.iso}{install-amd64-minimal-20110811.iso})
+
+После того, как установили настройки в биосе, о том что необходимо произвести загрузку с cdrom, грузимся. После загрузки нам предлагают выбрать какое ядро грузить, пишем gentooю. Далее идетмпроцесс загрузки ядра и в результате получаем консоль с правами доступа root.
+
+
+{\bf Подготавиваем HDD}
+
+
+Для установки потребуется жесткий диск размером не менее 6,5 гб. Разбить диск необходимо следующим образом:
+
+\begin{center}
+\begin{tabular}{|l|l|l|l|}
+\hline точка морнтирования  & размер & файловая система & раздел диска \\
+\hline swap  & 2 * RAM & swap & /dev/sda1 \\
+\hline /boot & 200 Mb & ext2  & /dev/sda2 \\
+\hline / & минимум 6 Гб & ext4 & /dev/sda3 \\
+\hline
+\end{tabular}
+\end{center}
+
+Что бы произвести разметку диска, необходимо воспользоваться программой fdisk:
+
+\begin{verbatim}
+# fdisk /dev/sda
+\end{verbatim}
+
+% TODO: написать о том как пользоваться программой fdisk
+
+После того как разделы были созданы, необходимо их отформатировать, с указанием файловой системы:
+
+\begin{verbatim}
+# mkfs.ext2 /dev/sda2
+# mkfs.ext4 /dev/sda4
+\end{verbatim}
+
+Создадим swap и запустим его:
+
+\begin{verbatim}
+# mkswap /dev/sda1
+# swapon /dev/sda1
+\end{verbatim}
+
+{\bf Устанавливаем разделы}
+
+\begin{verbatim}
+# mount /dev/sda3 /mnt/gentoo
+# mkdir /mnt/gentoo/boot
+# mount /dev/sda2 /mnt/gentoo/boot
+\end{verbatim}
+
+Далее необходимо скачать последние пакеты (stage3-i686-xxx.tar.bz2, portage-latest.tar.bz2)
+
 \subsubsection{Gentoo. Обновление}
 
 \subsection{Calculate Linux}
@@ -72,7 +129,7 @@
 
 \newpage 
 
-\section{Работа с коммандной строкой}
+\section{Работа с командной строкой}
 
 \subsection{Поиск файлов}
 
@@ -84,12 +141,14 @@
 
 \subsection{Разрешение зависимостей}
 
+\subsection{Написание собственных ebuild файлов}
+
 \newpage
 \section{Настройка}
 
 \subsection{Настройка сети}
 
-\subsection{Настройка автозапуска}
+\subsection{Настройка авто запуска}
 
 %\subsection{}
 %\subsection{}
@@ -110,7 +169,7 @@
 
 \subsection{Мониторинг}
 
-\subsection{Оптиммизация eix}
+\subsection{Оптимизация eix}
 
 \subsection{SSD}
 
