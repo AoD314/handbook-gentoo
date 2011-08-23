@@ -157,6 +157,280 @@ install-amd64-minimal-[...].iso
 
 Далее необходимо скачать последние пакеты (stage3-i686-xxx.tar.bz2, portage-latest.tar.bz2)
 
+Распаковываем:
+
+\begin{verbatim}
+# cd /mnt/gentoo
+# tar xvjpf /mnt/gentoo/tmp/stage3-*.tar.bz2
+\end{verbatim}
+
+Затем:
+
+\begin{verbatim}
+# cd /mnt/gentoo
+# tar xvjf /mnt/gentoo/tmp/portage-latest.tar.bz2 -C /mnt/gentoo/usr
+\end{verbatim}
+
+Отредактируем файл:
+
+\begin{verbatim}
+# vim /mnt/gentoo/etc/make.conf
+\end{verbatim}
+
+исправив строчку с параметрами компиляции на:
+
+\begin{verbatim}
+LINGUAS="en ru"
+ACCEPT_LICENSE="*"
+
+USE="sse sse2 sse3 ssse3 sse4.1 sse4.2 qt4"
+
+CFLAGS="-march=corei7  -mtune=corei7  -O2 -pipe -msse4.1 -msse4.2 -mpopcnt -fomit-frame-pointer"
+#CFLAGS="-march=core2  -mtune=generic -fomit-frame-pointer"
+
+MAKEOPTS="-j5 -s"
+
+EMERGE_DEFAULT_OPTS="--jobs=2"
+\end{verbatim}
+
+
+{\bf Вход в новую систему}
+
+
+Выбираем зеркало.
+
+\begin{verbatim}
+mirrorselect -i -r -o >> /mnt/gentoo/etc/make.conf
+\end{verbatim}
+
+затем копируем dns:
+
+\begin{verbatim}
+cp -L /etc/resolv.conf /mnt/gentoo/etc
+\end{verbatim}
+
+монтируем /proc и /dev:
+
+\begin{verbatim}
+mount -t proc none /mnt/gentoo/proc
+mount -o bind /dev /dev/gentoo/dev
+\end{verbatim}
+
+переносим оставшиеся настройки:
+
+\begin{verbatim}
+# chroot /mnt/gentoo /bin/bash
+# env-update
+>> Regenerating /etc/ld.so.cache...
+# source /etc/profile
+# export PS1="(chroot) $PS1"
+\end{verbatim}
+
+{\bf Конфигурируем Portage}
+
+\begin{verbatim}
+emerge --sync --quiet
+\end{verbatim}
+
+Укажем в переменную USE программы, которые мы хотим тоже скомпилировать. список всех программ доступен для просмотра так:
+
+\begin{verbatim}
+# less /usr/portage/profiles/use.desc
+\end{verbatim}
+
+откроем для редактированич файл /etc/make.conf и уточним переменную USE:
+
+\begin{verbatim}
+# vim /etc/make.conf
+
+USE="sse sse2 sse3 ssse3 sse4.1 sse4.2 qt4 gmp posix threads x264"
+\end{verbatim}
+
+Осталось только локализовать:
+
+\begin{verbatim}
+# vim /etc/locale.gen
+\end{verbatim}
+
+в файл /etc/locale.gen записываем:
+
+\begin{verbatim}
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+ru_RU.UTF-8 UTF-8
+ru_RU.KOI8-R KOI8-R
+ru_RU.ISO-8859-5 ISO-8859-5
+ru_RU.CP1251 CP1251
+\end{verbatim}
+
+запускаем генерацию:
+
+\begin{verbatim}
+# locale-gen
+\end{verbatim}
+
+{\bf Конфигурируем ядро.}
+
+определим время:
+
+\begin{verbatim}
+#cp /usr/share/zoneinfo/Etc/GMT+3 /etc/localtime
+\end{verbatim}
+
+Выбираем ядро и установим с помощью emerge:
+
+\begin{verbatim}
+# emerge gentoo-sources
+\end{verbatim}
+
+конфигурируем ядро:
+
+\begin{verbatim}
+# cd /usr/src/linux
+# make menuconfig
+\end{verbatim}
+
+После компилируем:
+
+\begin{verbatim}
+# make && make module_install
+\end{verbatim}
+
+затем копируем в загрузочный раздел получившиеся ядро:
+
+\begin{verbatim}
+# cp arch/i386/boot/bzImage /boot/kernel-2.6.30-gentoo-r4
+\end{verbatim}
+
+{\bf Конфигурирование системы}
+
+в файле /etc/fstab  содержится информация о том, какие разделы и где находятся и параметры их монтирования. Этот файл нужно отредактировать.
+
+/etc/fstab использует специальный синтаксис. Каждая строка - это запись, состоящ. из 6 полей, разделенные табом или пробелами:
+\begin{itemize}
+\item partition - путь к файлу устройства
+\item mount point - указывает точку монтирования, в которую должен быть установлен раздел
+\item filesystem - файловая система, которую использует раздел
+\item mount options - опции монтирования, разделенные запятыми(подробнее в man)
+\item dump - используется дампом для определения сбрасывания или нет(Нужно ставить 0)
+\item fsck - используется для определения и проверки файловой системы, если она была выключена не должным образом. Коневая файловая система должна имет 1, в то время как остальные должны иметь 2 (или 0, если проверка файловой системы не нужна).
+\end{itemize}
+
+Переходим непосредственно к редактированию:
+
+\begin{verbatim}
+# vim /etc/fstab
+\end{verbatim}
+
+должно получится что то такое:
+\newline
+
+\begin{tabular}{llllcc}
+/dev/sda1 & none & swap & sw & 0 & 0 \\
+/dev/sda2 & /boot & ext2 & defaults, noatime & 0 & 2\\
+/dev/sda3 & / & ext4 & defaults, noatime & 0 & 1 \\
+/dev/cdrom& /mnt/cdrom & auto & noauto,user,ro,utf8 & 0 & 0 \\
+proc & /proc & proc & nosuid,noexec,gid=proc & 0 & 0 \\
+\end{tabular}
+
+{\bf Настройка сети}
+
+откроем для редактирования след. файл:
+
+\begin{verbatim}
+# vim /etc/conf.d/net
+\end{verbatim}
+
+допишем настройки:
+
+\begin{verbatim}
+# config_eth0=("192.168.0.2 netmask 255.255.255.0 brd 192.168.0.255")
+# routes_eth0=("default via 192.168.0.1")
+\end{verbatim}
+
+добавим настройку сети в загрузку:
+
+\begin{verbatim}
+# rc-update add net.eth0 default
+* net.eth0 added to runlevel default
+# cd /etc/init.d/
+# ln -s net.lo net.eth1
+# rc-update add net.eth1 default
+* net.eth1 added to runlevel default
+\end{verbatim}
+
+
+{\bf Настройка входа в систему}
+
+сменим пароль рута:
+
+\begin{verbatim}
+# passwd
+\end{verbatim}
+
+Установим вход в систему:
+
+\begin{verbatim}
+# emerge syslog-ng
+# rc-update add syslog-ng default
+
+# emerge vixie-cron
+# rc-update add vixie-cron default
+# crontab /etc/crontab
+
+# emerge slocate
+
+# emerge dhcpcd
+
+# emerge ppp vim links ...
+\end{verbatim}
+
+
+{\bf Конфигурируем загрузчик}
+
+Теперь, когда наше ядро сконфигурировано и откомпилировано, и необходимые системные файлы конфигурации запонены правильно, пришло время установить программу, которая запустит наше ядро.
+
+Установим GRUB:
+
+\begin{verbatim}
+# emerge grub
+# vim /boot/grub/grub.conf
+\end{verbatim}
+
+Отредактируем файл, и получим приблизительно след.:
+
+\begin{verbatim}
+default 0
+timeout 5
+splashimage=(hd0,1)/boot/grub/splash.xpm.gz
+
+title Gentoo Linux 2.6.30-r4
+root (hd0,1)
+kernel /boot/kernel-2.6.30-gentoo-r4 root=/dev/sda3
+
+title windows XP
+rootnoverify (hd0,5)
+makeactive
+chainloader +1
+\end{verbatim}
+
+установим grub:
+
+\begin{verbatim}
+# grep -v rootfs /proc/mounts > etc/mtab
+# grub-install /dev/sda 
+\end{verbatim}
+
+Теперь все ! ребутяемся.
+
+\begin{verbatim}
+# exit 
+cdimage~# cd 
+cdimage~# umount /mnt/gentoo/boot /mnt/gentoo/dev /mnt/gentoo/proc /mnt/gentoo
+cdimage~# reboot
+
+\end{verbatim}
+
 
 
 \subsubsection{Gentoo. Обновление}
@@ -178,9 +452,15 @@ install-amd64-minimal-[...].iso
 
 \section{Менеджер пакетов}
 
+\subsection{утилита rc-update}
+
+\subsection{создание RAID}
+
 \subsection{Установка и удаление программ}
 
 \subsection{Разрешение зависимостей}
+
+\subsection{Поиск зависимостей}
 
 \subsection{Написание собственных ebuild файлов}
 
@@ -204,6 +484,8 @@ install-amd64-minimal-[...].iso
 \subsubsection{Настройка bash}
 
 \subsubsection{Настройка vim}
+
+\subsubsection{Настройка mplayer}
 
 \newpage
 \section{Мониторинг и производительность}
