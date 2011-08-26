@@ -112,7 +112,6 @@ install-amd64-minimal-[...].iso
 
 {\bf Подготавиваем HDD}
 
-
 Для установки потребуется жесткий диск размером не менее 6,5 гб. Разбить диск необходимо следующим образом:
 
 \begin{center}
@@ -200,20 +199,20 @@ EMERGE_DEFAULT_OPTS="--jobs=2"
 Выбираем зеркало.
 
 \begin{verbatim}
-mirrorselect -i -r -o >> /mnt/gentoo/etc/make.conf
+# mirrorselect -i -r -o >> /mnt/gentoo/etc/make.conf
 \end{verbatim}
 
 затем копируем dns:
 
 \begin{verbatim}
-cp -L /etc/resolv.conf /mnt/gentoo/etc
+# cp -L /etc/resolv.conf /mnt/gentoo/etc
 \end{verbatim}
 
 монтируем /proc и /dev:
 
 \begin{verbatim}
-mount -t proc none /mnt/gentoo/proc
-mount -o bind /dev /dev/gentoo/dev
+# mount -t proc none /mnt/gentoo/proc
+# mount -o bind /dev /mnt/gentoo/dev
 \end{verbatim}
 
 переносим оставшиеся настройки:
@@ -229,7 +228,7 @@ mount -o bind /dev /dev/gentoo/dev
 {\bf Конфигурируем Portage}
 
 \begin{verbatim}
-emerge --sync --quiet
+# emerge --sync --quiet
 \end{verbatim}
 
 Укажем в переменную USE программы, которые мы хотим тоже скомпилировать. список всех программ доступен для просмотра так:
@@ -274,7 +273,7 @@ ru_RU.CP1251 CP1251
 определим время:
 
 \begin{verbatim}
-#cp /usr/share/zoneinfo/Etc/GMT+3 /etc/localtime
+# cp /usr/share/zoneinfo/Etc/GMT+3 /etc/localtime
 \end{verbatim}
 
 Выбираем ядро и установим с помощью emerge:
@@ -481,11 +480,98 @@ cdimage~# reboot
 
 \subsection{Персональные настройки}
 
+\subsubsection{Настройка /etc/inputrc}
+
+Необходимо дописать для удобного поиска:
+
+\begin{verbatim}
+"\e[A":history-search-backward
+"\e[B":history-search-forward
+\end{verbatim}
+
+
 \subsubsection{Настройка bash}
+\begin{verbatim}
+PS1='\[\e[1;32m\]\u \[\e[0;31m\][\[\e[1;34m\]
+\w\[\e[0;31m\]] \[\e[1;37m\]{\t}\n\$ '
+
+PATH=$PATH:/opt/cuda/bin
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/cuda/lib64
+
+alias l="ls -lah"
+
+shopt -s histappend
+PROMPT_COMMAND='history -a'
+shopt -s cdspell
+\end{verbatim}
 
 \subsubsection{Настройка vim}
+\begin{verbatim}
+set nu 
+set ts=4
+set vb " Заменять звуковой сигнал визуальным
+
+colorscheme Black
+set background=dark
+set listchars=tab:··
+set list
+
+if (has('gui'))
+····set gfn=Droid\ Sans\ Mono\ 10 
+····set lines=50
+····set columns=101
+endif
+
+set history=8000
+set showcmd
+
+if has("autocmd")
+····filetype indent on 
+endif
+
+set incsearch
+set nohlsearch
+
+" OmniComplete
+map <C-F12> <Esc>:!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q ..<CR>
+let OmniCpp_GlobalScopeSearch = 1
+let OmniCpp_NamespaceSearch = 1
+filetype plugin on 
+filetype indent on 
+set ofu=syntaxcomplete#Complete
+
+
+map <F2> <Esc>:tabprev <Esc>
+map <F3> <Esc>:tabnext <Esc>
+map <F4> <Esc>:tab sp .<CR>
+
+" вставка текста без комментариев
+set fo-=ro
+
+" Настройка свертки
+set foldenable
+set foldlevel=25
+
+set t_Co=256
+\end{verbatim}
+
 
 \subsubsection{Настройка mplayer}
+\begin{verbatim}
+# Write your default config options here!
+#font=~/.mplayer/FreeSans.ttf
+fontconfig = true
+font = "Droid Sans Mono"
+double=yes
+#cache=65536
+subfont-text-scale = 3
+subfont-blur = 1
+subfont-osd-scale = 1
+subfont-outline = 1
+nolirc=yes
+lavdopts=threads=8
+af=volnorm
+\end{verbatim}
 
 \newpage
 \section{Мониторинг и производительность}
