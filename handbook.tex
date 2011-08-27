@@ -377,7 +377,8 @@ proc & /proc & proc & nosuid,noexec,gid=proc & 0 & 0 \\
 # rc-update add vixie-cron default
 # crontab /etc/crontab
 
-# emerge slocate
+## for indexing your files
+# emerge mlocate
 
 # emerge dhcpcd
 
@@ -400,12 +401,12 @@ proc & /proc & proc & nosuid,noexec,gid=proc & 0 & 0 \\
 
 \begin{verbatim}
 default 0
-timeout 5
+timeout 10
 splashimage=(hd0,1)/boot/grub/splash.xpm.gz
 
-title Gentoo Linux 2.6.30-r4
+title Gentoo Linux 3.0.3
 root (hd0,1)
-kernel /boot/kernel-2.6.30-gentoo-r4 root=/dev/sda3
+kernel /boot/kernel-3.0.3-gentoo root=/dev/sda1
 
 title windows XP
 rootnoverify (hd0,5)
@@ -417,7 +418,7 @@ chainloader +1
 
 \begin{verbatim}
 # grep -v rootfs /proc/mounts > etc/mtab
-# grub-install /dev/sda 
+# grub-install --no-floppy /dev/sda
 \end{verbatim}
 
 Теперь все ! ребутяемся.
@@ -430,9 +431,42 @@ cdimage~# reboot
 
 \end{verbatim}
 
+После загрузки можно поставить eix, layman.
+Искать можно так:
+\begin{verbatim}
+# emerge --search eix
+\end{verbatim}
+
+Заходить из под рута плохо, поэтому создадим пользователя:
+\begin{verbatim}
+# useradd -m -G audio,cdrom,portage,usb,users,plugdev,video,wheel -s /bin/bash neo
+# passwd neo
+\end{verbatim}
 
 
 \subsubsection{Gentoo. Обновление}
+
+\begin{verbatim}
+# emerge --update --deep --newuse world
+# emerge --depclean
+# revdep-rebuild
+\end{verbatim}
+
+Установим и настроим eix:
+\begin{verbatim}
+# emerge eix
+# eix-update
+\end{verbatim}
+
+Установим layman:
+\begin{verbatim}
+# emerge layman
+\end{verbatim}
+
+Обновим gcc:
+\begin{verbatim}
+# emerge -av gcc
+\end{verbatim}
 
 \subsection{Calculate Linux}
 
@@ -513,7 +547,7 @@ set vb " Заменять звуковой сигнал визуальным
 
 colorscheme Black
 set background=dark
-set listchars=tab:··
+set listchars=tab:..
 set list
 
 if (has('gui'))
