@@ -156,6 +156,39 @@ install-amd64-minimal-[...].iso
 
 Далее необходимо скачать последние пакеты (stage3-i686-xxx.tar.bz2, portage-latest.tar.bz2)
 
+{\bf Настройка сети}
+
+откроем для редактирования след. файл:
+
+\begin{verbatim}
+# vim /etc/conf.d/net
+\end{verbatim}
+
+допишем настройки:
+
+\begin{verbatim}
+# config_eth0=("192.168.0.2 netmask 255.255.255.0 brd 192.168.0.255")
+## config_eth0=("dhcp")
+# routes_eth0=("default via 192.168.0.1")
+\end{verbatim}
+
+добавим настройку сети в загрузку:
+
+\begin{verbatim}
+# rc-update add net.eth0 default
+* net.eth0 added to runlevel default
+# cd /etc/init.d/
+# ln -s net.lo net.eth1
+# rc-update add net.eth1 default
+* net.eth1 added to runlevel default
+\end{verbatim}
+
+Скачиваем пакеты. 
+В случае, если нету интернета, а установить приложение очень хочется, то можно скачать пакет руками на другой машине и положить архив в каталог:
+\begin{verbatim}
+/usr/portage/distfiles
+\end{verbatim}
+
 Распаковываем:
 
 \begin{verbatim}
@@ -292,13 +325,13 @@ ru_RU.CP1251 CP1251
 После компилируем:
 
 \begin{verbatim}
-# make && make module_install
+# make && make modules_install
 \end{verbatim}
 
 затем копируем в загрузочный раздел получившиеся ядро:
 
 \begin{verbatim}
-# cp arch/i386/boot/bzImage /boot/kernel-2.6.30-gentoo-r4
+# cp arch/x86_64/boot/bzImage /boot/kernel-3.0.3-gentoo
 \end{verbatim}
 
 {\bf Конфигурирование системы}
@@ -332,31 +365,7 @@ ru_RU.CP1251 CP1251
 proc & /proc & proc & nosuid,noexec,gid=proc & 0 & 0 \\
 \end{tabular}
 
-{\bf Настройка сети}
 
-откроем для редактирования след. файл:
-
-\begin{verbatim}
-# vim /etc/conf.d/net
-\end{verbatim}
-
-допишем настройки:
-
-\begin{verbatim}
-# config_eth0=("192.168.0.2 netmask 255.255.255.0 brd 192.168.0.255")
-# routes_eth0=("default via 192.168.0.1")
-\end{verbatim}
-
-добавим настройку сети в загрузку:
-
-\begin{verbatim}
-# rc-update add net.eth0 default
-* net.eth0 added to runlevel default
-# cd /etc/init.d/
-# ln -s net.lo net.eth1
-# rc-update add net.eth1 default
-* net.eth1 added to runlevel default
-\end{verbatim}
 
 
 {\bf Настройка входа в систему}
@@ -388,7 +397,7 @@ proc & /proc & proc & nosuid,noexec,gid=proc & 0 & 0 \\
 
 {\bf Конфигурируем загрузчик}
 
-Теперь, когда наше ядро сконфигурировано и откомпилировано, и необходимые системные файлы конфигурации запонены правильно, пришло время установить программу, которая запустит наше ядро.
+Теперь, когда наше ядро сконфигурировано и откомпилировано, и необходимые системные файлы конфигурации заполнены правильно, пришло время установить программу, которая запустит наше ядро.
 
 Установим GRUB:
 
@@ -406,7 +415,7 @@ splashimage=(hd0,1)/boot/grub/splash.xpm.gz
 
 title Gentoo Linux 3.0.3
 root (hd0,1)
-kernel /boot/kernel-3.0.3-gentoo root=/dev/sda1
+kernel /boot/kernel-3.0.3-gentoo root=/dev/sda1 rootfstype=ext4
 
 title windows XP
 rootnoverify (hd0,5)
@@ -439,8 +448,8 @@ cdimage~# reboot
 
 Заходить из под рута плохо, поэтому создадим пользователя:
 \begin{verbatim}
-# useradd -m -G audio,cdrom,portage,usb,users,plugdev,video,wheel -s /bin/bash neo
-# passwd neo
+# useradd -m -G audio,cdrom,portage,usb,users,video,wheel -s /bin/bash user
+# passwd user
 \end{verbatim}
 
 
@@ -466,6 +475,11 @@ cdimage~# reboot
 Обновим gcc:
 \begin{verbatim}
 # emerge -av gcc
+\end{verbatim}
+
+Пересборка мира:
+\begin{verbatim}
+emerge -aveNUD @system @world
 \end{verbatim}
 
 \subsection{Calculate Linux}
