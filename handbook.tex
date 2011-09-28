@@ -505,7 +505,17 @@ emerge -aveNUD @system @world
 
 \subsection{Установка и удаление программ}
 
+Установить пакет в бинарном виде:
+
+\begin{verbatim}
+# emerge -avg media-video/vcdimager
+\end{verbatim}
+
 \subsection{Разрешение зависимостей}
+
+\begin{verbatim}
+# equery d sys-auth/thinkfinger
+\end{verbatim}
 
 \subsection{Поиск зависимостей}
 
