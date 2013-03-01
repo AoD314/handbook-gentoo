@@ -1,0 +1,2 @@
+media-video/ffmpeg doc mp3 opus sdl ssse3 theora threads truetype vdpau vpx x264 xvid vaapi libcaca libv4l v4l oss
+virtual/ffmpeg X encode mp3 sdl truetype x264 theora threads vaapi vdpau v4l avresample
