@@ -71,7 +71,7 @@ DEPEND="virtual/jpeg
 	jack? (	media-sound/jack-audio-connection-kit )
 	sndfile? ( media-libs/libsndfile )
 	collada? ( media-libs/opencollada )
-	cuda? ( =dev-util/nvidia-cuda-toolkit-4.2 )
+	cuda? ( dev-util/nvidia-cuda-toolkit )
 	ndof? ( dev-libs/libspnav )
 	doc? ( dev-python/sphinx )"
 

@@ -18,8 +18,8 @@ KEYWORDS=""
 IUSE=""
 
 DEPEND="
-	x11-libs/qt-core
-	x11-libs/qt-script"
+	dev-qt/qtcore
+	dev-qt/qtscript"
 RDEPEND="${DEPEND}"
 
 src_install(){
