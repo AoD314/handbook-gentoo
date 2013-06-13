@@ -1,4 +1,4 @@
-\documentclass[12pt, a6paper]{article}
+\documentclass[10pt, a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[english, russian]{babel}
@@ -465,9 +465,9 @@ default 0
 timeout 10
 splashimage=(hd0,1)/boot/grub/splash.xpm.gz
 
-title Gentoo Linux 3.0.3
+title Gentoo Linux 3.1.4
 root (hd0,1)
-kernel /boot/kernel-3.0.3-gentoo root=/dev/sda1 rootfstype=ext4
+kernel /boot/kernel-3.1.4-gentoo root=/dev/sda1 rootfstype=ext4
 
 title windows XP
 rootnoverify (hd0,5)
@@ -544,6 +544,12 @@ emerge -aveNUD @system @world
 
 \subsection{Поиск файлов}
 
+\subsection{Монтирование tmpfs(ramdisk)}
+
+\begin{verbatim}
+mount -t tmpfs tmpfs -o size=2048M /tmp/ramdisk/
+\end{verbatim}
+
 \newpage
 
 \section{Менеджер пакетов}
@@ -600,9 +606,6 @@ emerge -aveNUD @system @world
 \subsubsection{Настройка bash}
 \begin{verbatim}
 
-PS1='\[\e[1;32m\]\u \[\e[0;31m\] [\[\e[1;34m\]\w 
-\[\e[0;31m\]] \[\e[1;37m\]{\t}\n\$ '
-
 PATH=$PATH:/opt/bin:/opt/sublime-text2/
 #LD_LIBRARY_PATH
 
@@ -631,6 +634,10 @@ HISTCONTROL=ignoreboth
 HISTIGNORE="&:pwd:ls:ls -l:ls -la:ll:cd:cd \-:cd /:cd .."
 
 . /etc/profile
+
+PS1='\[\e[1;32m\]\u \[\e[0;31m\] [\[\e[1;34m\]\w 
+\[\e[0;31m\]] \[\e[1;37m\]{\t}\n\$ '
+
 \end{verbatim}
 
 \subsubsection{Настройка gitconfig}
