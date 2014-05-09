@@ -1,3 +1,1 @@
-dev-cpp/glog gflags
-
-media-gfx/blender openexr openmp sdl sse cycles ffmpeg fftw cuda doc smoke fluid addons oceansim sm_20 sm_21 -game-engine 
+media-gfx/blender openexr openmp sdl sse cycles ffmpeg fftw cuda doc smoke fluid addons oceansim sm_20 sm_21 -game-engine

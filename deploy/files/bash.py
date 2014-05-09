@@ -7,18 +7,15 @@ from general import create_dir, create_file, configure_print
 
 def configure(config):
     configure_print('bash')
-    path_to_home = Path(config['path_to_root'], 'home', config['user_name'])
+    user_name = config['user_name']
+    path_to_home = Path(config['path_to_root'], 'home', user_name)
 
     with create_file(Path(path_to_home, '.bashrc')) as f:
         print("""
-export HISTSIZE=8192
-export HISTFILESIZE=$HISTSIZE
-export HISTIGNORE="&:ls:[bf]g:exit:l:ll:cd ..:m:n:pwd:[ \t]*"
-export HISTCONTROL=ignorespace:erasedups
 
 PS1='\\[\\e[1;32m\\]\\u \\[\\e[0;31m\\] [\\[\\e[1;34m\\]\\w \\[\\e[0;31m\\]] \\[\\e[1;37m\\]{\\t}\\n\\$ ' """ + """
 
-export CHROMIUM_USER_FLAGS="--disk-cache-dir=/tmp/chromium-cache/ --disk-cache-size={}"
+export CHROMIUM_USER_FLAGS="--disk-cache-dir=/tmp/chromium-cache-{} --scroll-pixels=250 --memory-model=high --disk-cache-size={}"
 
 shopt -s histappend
 PROMPT_COMMAND='history -a'
@@ -46,7 +43,7 @@ alias ...="cd ../.."
 source ~/.git-completion.bash
 
 bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'""".format(str(64 * 1024 * 1024), str(multiprocessing.cpu_count() + 1)), file=f)
+bind '"\e[B": history-search-forward'""".format(user_name, str(256 * 1024 * 1024), str(multiprocessing.cpu_count() + 1)), file=f)
 
 
 if __name__ == '__main__':

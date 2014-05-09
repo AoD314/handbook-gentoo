@@ -1,1 +1,1 @@
-media-libs/mesa classic egl gallium -llvm nptl shared-glapi gles2 wayland -xorg gles1 g3dvl vdpau 
+media-libs/mesa classic egl gallium -llvm nptl shared-glapi gles2 wayland xorg gles1 g3dvl vdpau

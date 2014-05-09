@@ -1,1 +1,1 @@
-media-libs/libvpx mmx sse sse2 sse3 sse4_1 ssse3 postproc threads
+media-libs/libvpx postproc
