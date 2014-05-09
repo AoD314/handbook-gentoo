@@ -5,6 +5,8 @@ from pathlib import Path
 import bash, vim, git, mpv, profile, fstab, locale, make, net, sysctl, X
 
 from general import create_file
+import subprocess
+from deploy.files.fstab import find_device_by_name
 
 applications_start = [
     'app-admin/syslog-ng',
@@ -12,7 +14,9 @@ applications_start = [
     'virtual/ssh',
     'net-misc/dhcpcd',
     'sys-boot/grub',
+    '=sys-devel/gcc-4.8.2',
     '=sys-kernel/gentoo-sources-3.14.3',
+    'sys-kernel/genkernel',
     'app-editors/vim',
     'app-portage/eix',
     'app-portage/genlop',
@@ -21,10 +25,10 @@ applications_start = [
     'app-portage/mirrorselect',
     'app-portage/portage-utils',
     'app-shells/bash-completion',
-    'app-text/tree',
     'net-analyzer/iftop',
     'sys-process/iotop',
     'sys-process/htop',
+    'app-text/tree',
     'virtual/awk',
     'virtual/eject',
     'net-analyzer/nmap',
@@ -129,7 +133,11 @@ applications_kde = [
     'kde-base/kdebase-startkde'
 ]
 
+
 def configure_applications(config):
+    #subprocess.getstatusoutput('tar xvjpf ' + config['path_to_stage3'] + ' -C ' + config['path_to_root'])
+    #subprocess.getstatusoutput('tar xvjf  ' + config['path_to_portage'] + ' -C ' + str(Path(config['path_to_root'], 'usr')))
+
     profile.configure(config)
     fstab.configure(config)
     locale.configure(config)
@@ -146,6 +154,7 @@ def configure_applications(config):
 
     # generate shell install script
     with create_file(Path(config['path_to_root'], 'gentoo-install.sh')) as f:
+        print('#\n# WARNING !!!! check PROFILE/LOCALE set <number>\n#\n\n', file=f)
         print('echo mounting ...', file=f)
         print('mount -t proc proc {}'.format(str(Path(config['path_to_root'], 'proc'))), file=f)
         print('mount --rbind /sys {}'.format(str(Path(config['path_to_root'], 'sys'))), file=f)
@@ -156,39 +165,55 @@ def configure_applications(config):
         print('source /etc/profile', file=f)
         print('export PS1="(chroot) $PS1"', file=f)
         print('\n', file=f)
+        print('echo "SYNC ..."', file=f)
         print('emerge-webrsync', file=f)
         print('emerge --sync --quiet', file=f)
         print('\n', file=f)
+        print('eselect profile set 3', file=f)
         print('', file=f)
+        print('echo "Install TimeZone ..."', file=f)
+        print('echo "Europe/Moscow" > /etc/timezone', file=f)
+        print('emerge --config sys-libs/timezone-data', file=f)
         print('', file=f)
-        print('', file=f)
-        print('', file=f)
-
-        # eselect profile list
-
-        # ls /usr/share/zoneinfo
-        # echo "Europe/Brussels" > /etc/timezone
-        #emerge --config sys-libs/timezone-data
-
+        print('echo "Install locale ..."', file=f)
         print('locale-gen\n', file=f)
         print('eselect locale set 0\n', file=f)
         print('env-update && source /etc/profile', file=f)
 
+        print('echo "Install applications ..."', file=f)
         print('emerge ' + ' '.join(applications_start), file=f)
         print('\n', file=f)
+        print('echo "Update autorun ..."', file=f)
         print('rc-update add syslog-ng default', file=f)
         print('rc-update add cronie default', file=f)
         print('crontab /etc/crontab', file=f)
         print('rc-update add sshd default\n', file=f)
+
+        print('echo "Update /etc/mtab..."', file=f)
         print('grep -v rootfs /proc/mounts > /etc/mtab\n', file=f)
 
-        print('useradd -m -G wheel,audio,cdrom,video,usb,users,portage,games,android,vboxusers,kvm -s /bin/bash ' + config['user_name'] + '\n')
+        print('echo "Add user ..."', file=f)
+        print('useradd -m -G wheel,audio,cdrom,video,usb,users,portage,games,android,vboxusers,kvm -s /bin/bash ' +
+              config['user_name'] + '\n')
 
         print('echo "Enter new root passwd"', file=f)
         print('passwd', file=f)
+        print('\n', file=f)
+        print('echo "Network configure ... "\n', file=f)
+        print('cd /etc/init.d', file=f)
+        print('ln -s net.lo net.eth0', file=f)
+        print('rc-update add net.eth0 default', file=f)
+        print('\n', file=f)
 
         # kernel install
-        # grub
+        print('echo "Kernel configure ... "\n', file=f)
+        print('genkernel --oldconfig --no-clean --no-mrproper', file=f)
+
+        print('echo "Grug2 configure ... "\n', file=f)
+        print('grub2-install ' + str(find_device_by_name(config['table'], '/')), file=f)
+        print('grub2-mkconfig -o /boot/grub/grub.cfg', file=f)
+
+        print('echo "done!"', file=f)
 
     with create_file(Path(config['path_to_root'], 'gentoo-exit.sh')) as f:
         print("""
@@ -197,4 +222,4 @@ echo "exit && cd / && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -l /mnt/ge
 
     with create_file(Path(config['path_to_root'], 'gentoo-install-my-tools.sh')) as f:
         print('emerge ' + ' '.join(applications_base) + ' '.join(applications_X) + ' '.join(applications_big) +
-            ' '.join(applications_games) + ' '.join(applications_kde), file=f)
+              ' '.join(applications_games) + ' '.join(applications_kde), file=f)
