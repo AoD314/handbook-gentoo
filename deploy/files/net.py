@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.4
 
 from pathlib import Path
-from general import create_file, configure_print
+from files.general import configure_print, create_file
 
 
 def configure(config):

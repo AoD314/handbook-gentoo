@@ -4,7 +4,7 @@ import multiprocessing
 from pathlib import Path
 import subprocess
 import math
-from general import create_file, configure_print
+from files.general import configure_print, create_file
 
 
 def get_sse_support():

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3.4
-import multiprocessing
 
 from pathlib import Path
-from general import create_dir, create_file, configure_print
+from files.general import configure_print, create_file
 
 
 def configure(config):

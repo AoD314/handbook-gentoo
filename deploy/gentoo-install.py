@@ -1,9 +1,9 @@
 #!/usr/bin/env python3.4
 
-from config import configure_applications
+from files.config import configure_applications
 
 table = [
-    {'name': '/',            'device': '/dev/sde1'},
+    {'name': '/',            'device': '/dev/sda5'},
     {'name': '/home',        'device': '/dev/sda2'},
     {'name': '/torrent',     'device': '/dev/sdc2'},
     {'name': '/work',        'device': '/dev/sdd2'},
@@ -14,8 +14,6 @@ table = [
 config = {
     'path_to_root': '/tmp/gentoo',
     'user_name': 'aod314',
-    'password': '123',
-    'arch': 'x64',
     'device': '/dev/sda',
     'path_to_portage': '/tmp/portage-latest.tar.bz2',
     'path_to_stage3': '/tmp/stage3-amd64-latest.tar.bz2',
@@ -30,4 +28,4 @@ print('    for SSD disable journal \n        # tune2fs -o journal_data_writeback
 print('\n\n')
 
 print('configure applications')
-#configure_applications(config)
+configure_applications(config)

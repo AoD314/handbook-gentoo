@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.4
 
 from pathlib import Path
-from general import create_file, configure_print
 import subprocess
+from files.general import configure_print, create_file
 
 
 def find_device_by_name(table, name):

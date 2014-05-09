@@ -2,11 +2,8 @@
 
 from pathlib import Path
 
-import bash, vim, git, mpv, profile, fstab, locale, make, net, sysctl, X
-
-from general import create_file
-import subprocess
-from deploy.files.fstab import find_device_by_name
+from files import bash, vim, git, mpv, profile, fstab, locale, make, net, sysctl, X, sublime
+from files import general
 
 applications_start = [
     'app-admin/syslog-ng',
@@ -19,6 +16,7 @@ applications_start = [
     'sys-kernel/genkernel',
     'app-editors/vim',
     'app-portage/eix',
+    'x11-apps/setxkbmap',
     'app-portage/genlop',
     'app-portage/gentoolkit',
     'app-portage/layman',
@@ -45,6 +43,7 @@ applications_base = [
     'dev-util/ninja',
     'dev-vcs/git',
     'dev-qt/qt-creator',
+    'x11-misc/qxkb',
     'sys-devel/clang',
     'sys-devel/llvm',
     'sys-devel/gdb',
@@ -146,6 +145,7 @@ def configure_applications(config):
     sysctl.configure(config)
     X.configure(config)
     bash.configure(config)
+    sublime.configure(config)
     vim.configure(config)
     git.configure(config)
     mpv.configure(config)
@@ -153,7 +153,7 @@ def configure_applications(config):
     # copy package.{use,keywords,...}
 
     # generate shell install script
-    with create_file(Path(config['path_to_root'], 'gentoo-install.sh')) as f:
+    with general.create_file(Path(config['path_to_root'], 'gentoo-install.sh')) as f:
         print('#\n# WARNING !!!! check PROFILE/LOCALE set <number>\n#\n\n', file=f)
         print('echo mounting ...', file=f)
         print('mount -t proc proc {}'.format(str(Path(config['path_to_root'], 'proc'))), file=f)
@@ -194,9 +194,11 @@ def configure_applications(config):
 
         print('echo "Add user ..."', file=f)
         print('useradd -m -G wheel,audio,cdrom,video,usb,users,portage,games,android,vboxusers,kvm -s /bin/bash ' +
-              config['user_name'] + '\n')
+              config['user_name'] + '\n', file=f)
+        print('echo "Enter new password for ' + config['user_name'] + '"', file=f)
+        print('passwd ' + config['user_name'], file=f)
 
-        print('echo "Enter new root passwd"', file=f)
+        print('echo "Enter new root password"', file=f)
         print('passwd', file=f)
         print('\n', file=f)
         print('echo "Network configure ... "\n', file=f)
@@ -205,21 +207,38 @@ def configure_applications(config):
         print('rc-update add net.eth0 default', file=f)
         print('\n', file=f)
 
+        print('echo "Keyboard configure ... "\n', file=f)
+        print('setxkbmap -layout "us,ru(winkeys)" -option grp:caps_toggle,grp_led:caps', file=f)
+
         # kernel install
         print('echo "Kernel configure ... "\n', file=f)
+
+        #
+        # copy .config to /usr/src/linux
+        #
+        #  !!!
+        # !!!!!
+        # !!!!!
+        # !!!!!
+        #  !!!
+        #   !
+        #   !
+        #  !!!
+        #   !
+
         print('genkernel --oldconfig --no-clean --no-mrproper', file=f)
 
         print('echo "Grug2 configure ... "\n', file=f)
-        print('grub2-install ' + str(find_device_by_name(config['table'], '/')), file=f)
+        print('grub2-install ' + str(fstab.find_device_by_name(config['table'], '/')), file=f)
         print('grub2-mkconfig -o /boot/grub/grub.cfg', file=f)
 
         print('echo "done!"', file=f)
 
-    with create_file(Path(config['path_to_root'], 'gentoo-exit.sh')) as f:
+    with general.create_file(Path(config['path_to_root'], 'gentoo-exit.sh')) as f:
         print("""
 echo "exit && cd / && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -l /mnt/gentoo{/boot,/proc,}"
 """, file=f)
 
-    with create_file(Path(config['path_to_root'], 'gentoo-install-my-tools.sh')) as f:
+    with general.create_file(Path(config['path_to_root'], 'gentoo-install-my-tools.sh')) as f:
         print('emerge ' + ' '.join(applications_base) + ' '.join(applications_X) + ' '.join(applications_big) +
               ' '.join(applications_games) + ' '.join(applications_kde), file=f)
