@@ -2,17 +2,6 @@
 
 from pathlib import Path
 
-
-config = {
-    'path_to_root': '/tmp/gentoo',
-    'user_name': 'aod314',
-    'password': '123',
-    'arch': 'x64',
-    'device': '/dev/sda',
-    'path_to_portage': '/tmp/portage-latest.tar.bz2',
-    'path_to_stage3': '/tmp/stage3-amd64-latest.tar.bz2'
-}
-
 table = [
     {'name': '/',            'device': '/dev/sde1'},
     {'name': '/home',        'device': '/dev/sda2'},
@@ -21,6 +10,18 @@ table = [
     {'name': '/video',       'device': '/dev/sda5'},
     {'name': '/music_video', 'device': '/dev/sdb2'}
 ]
+
+
+config = {
+    'path_to_root': '/tmp/gentoo',
+    'user_name': 'aod314',
+    'password': '123',
+    'arch': 'x64',
+    'device': '/dev/sda',
+    'path_to_portage': '/tmp/portage-latest.tar.bz2',
+    'path_to_stage3': '/tmp/stage3-amd64-latest.tar.bz2',
+    'table': table
+}
 
 commands = []
 

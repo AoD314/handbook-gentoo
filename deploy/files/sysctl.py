@@ -9,6 +9,10 @@ def configure(config):
 
     with create_file(Path(config['path_to_root'], 'etc/sysctl.conf')) as f:
         print("""
+net.ipv4.ip_forward = 0
+net.ipv4.conf.default.rp_filter = 1
+net.ipv4.conf.all.rp_filter = 1
+
 vm.dirty_background_ratio = 50
 vm.dirty_ratio = 85
 vm.overcommit_memory = 1
