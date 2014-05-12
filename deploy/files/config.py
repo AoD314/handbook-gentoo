@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.4
+import os
 
 from pathlib import Path
 
@@ -13,15 +14,14 @@ applications_start = [
     'virtual/ssh',
     'net-misc/dhcpcd',
     'sys-boot/grub',
-    '=sys-devel/gcc-4.8.2',
-    '=sys-kernel/gentoo-sources-3.14.3',
+    'sys-kernel/gentoo-sources',
     'sys-kernel/genkernel',
     'app-editors/vim',
     'app-portage/eix',
+    'app-portage/layman',
     'x11-apps/setxkbmap',
     'app-portage/genlop',
     'app-portage/gentoolkit',
-    'app-portage/layman',
     'app-portage/mirrorselect',
     'app-portage/portage-utils',
     'app-shells/bash-completion',
@@ -37,7 +37,8 @@ applications_start = [
     'net-firewall/iptables',
     'net-misc/dhcpcd',
     'net-misc/wget',
-    'sys-apps/lm_sensors'
+    'sys-apps/lm_sensors',
+    'net-misc/ntp'
 ]
 
 applications_base = [
@@ -136,7 +137,11 @@ applications_kde = [
 
 
 def configure_applications(config):
+    print('clear ' + config['path_to_root'] + ' ...')
+    subprocess.getstatusoutput('rm -rf ' + config['path_to_root'])
+    print('unpacking stage3 ...')
     subprocess.getstatusoutput('tar xvjpf ' + config['path_to_stage3'] + ' -C ' + config['path_to_root'])
+    print('unpacking portage ...')
     subprocess.getstatusoutput('tar xvjf  ' + config['path_to_portage'] + ' -C ' + str(Path(config['path_to_root'], 'usr')))
 
     profile.configure(config)
@@ -156,27 +161,43 @@ def configure_applications(config):
     if not r.exists():
         r.mkdir()
     shutil.copyfile('./config/system/.config', str(Path(r, '.config')))
+    shutil.copytree('../package/package.keywords/', str(Path(config['path_to_root'], 'etc/portage/package.keywords/')))
+    shutil.copytree('../package/package.unmask/', str(Path(config['path_to_root'], 'etc/portage/package.unmask/')))
+    shutil.copytree('../package/package.use/', str(Path(config['path_to_root'], 'etc/portage/package.use/')))
 
-    # copy package.{use,keywords,...}
+    with general.create_file(Path(config['path_to_root'], 'var/lib/layman/make.conf')) as f:
+        print('PORTDIR_OVERLAY="$PORTDIR_OVERLAY"', file=f)
 
     # generate shell install script
-    with general.create_file(Path(config['path_to_root'], 'gentoo-install.sh')) as f:
+    with general.create_file(Path(config['path_to_root'], 'gentoo-chroot.sh')) as f:
         print('echo mounting ...', file=f)
         print('mount -t proc proc {}'.format(str(Path(config['path_to_root'], 'proc'))), file=f)
         print('mount --rbind /sys {}'.format(str(Path(config['path_to_root'], 'sys'))), file=f)
         print('mount --rbind /dev {}'.format(str(Path(config['path_to_root'], 'dev'))), file=f)
-        print('\n', file=f)
-
         print('echo chrooting ...', file=f)
         print('chroot {} /bin/bash'.format(config['path_to_root']), file=f)
+        print('\n', file=f)
+
+    with general.create_file(Path(config['path_to_root'], 'gentoo-install.sh')) as f:
         print('source /etc/profile', file=f)
         print('export PS1="(chroot) $PS1"', file=f)
+        print('mkdir /usr/local/portage', file=f)
         print('\n', file=f)
 
         print('echo "SYNC ..."', file=f)
         print('emerge-webrsync', file=f)
         print('emerge --sync --quiet', file=f)
         print('\n', file=f)
+
+        print('echo "Install gcc ..."', file=f)
+        print('echo "emerge =sys-devel/gcc-4.8.2"', file=f)
+        print('emerge =sys-devel/gcc-4.8.2', file=f)
+        print('gcc-config -l', file=f)
+        print('echo "Enter number of compiler:"', file=f)
+        print('read cm', file=f)
+        print('gcc-config ${cm}', file=f)
+        print('echo "Rebuild qtcore(emerge dev-qt/qtcore)"', file=f)
+        print('emerge dev-qt/qtcore', file=f)
 
         print('echo "Setting profile ..."', file=f)
         print('eselect profile list', file=f)
@@ -199,7 +220,9 @@ def configure_applications(config):
         print('env-update && source /etc/profile', file=f)
 
         print('echo "Install applications ..."', file=f)
-        print('emerge ' + ' '.join(applications_start), file=f)
+        cmd = 'emerge -vuDN ' + ' '.join(applications_start)
+        print('echo "{}"'.format(cmd), file=f)
+        print(cmd, file=f)
         print('\n', file=f)
 
         print('echo "Update autorun ..."', file=f)
@@ -228,6 +251,12 @@ def configure_applications(config):
         print('grub2-install ' + str(fstab.find_device_by_name(config['table'], '/')), file=f)
         print('grub2-mkconfig -o /boot/grub/grub.cfg', file=f)
 
+        print('echo "Creating groups ..."', file=f)
+        print('groupadd games', file=f)
+        print('groupadd android', file=f)
+        print('groupadd vboxusers', file=f)
+        print('groupadd kvm', file=f)
+
         print('echo "Add user ..."', file=f)
         print('useradd -m -G wheel,audio,cdrom,video,usb,users,portage,games,android,vboxusers,kvm -s /bin/bash ' +
               config['user_name'] + '\n', file=f)
@@ -241,9 +270,16 @@ def configure_applications(config):
 
     with general.create_file(Path(config['path_to_root'], 'gentoo-exit.sh')) as f:
         print("""
-echo "exit && cd / && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -l /mnt/gentoo{/boot,/proc,}"
+echo "exit && cd / && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -l /mnt/gentoo/proc"
 """, file=f)
 
     with general.create_file(Path(config['path_to_root'], 'gentoo-install-my-tools.sh')) as f:
-        print('emerge ' + ' '.join(applications_base) + ' '.join(applications_X) + ' '.join(applications_big) +
-              ' '.join(applications_games) + ' '.join(applications_kde), file=f)
+        cmd = 'emerge ' + ' '.join(applications_base) + ' '.join(applications_X) + ' '.join(applications_big) + ' '.join(applications_games) + ' '.join(applications_kde)
+        print('echo "' + cmd + '"', file=f)
+        print(cmd, file=f)
+
+
+    os.chmod(str(Path(config['path_to_root'], 'gentoo-install-my-tools.sh')), mode=755)
+    os.chmod(str(Path(config['path_to_root'], 'gentoo-install.sh')), mode=755)
+    os.chmod(str(Path(config['path_to_root'], 'gentoo-chroot.sh')), mode=755)
+    os.chmod(str(Path(config['path_to_root'], 'gentoo-exit.sh')), mode=755)

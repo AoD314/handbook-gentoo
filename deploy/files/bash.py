@@ -13,9 +13,7 @@ def configure(config):
     with create_file(Path(path_to_home, '.bashrc')) as f:
         print("""
 
-PS1='\\[\\e[1;32m\\]\\u \\[\\e[0;31m\\] [\\[\\e[1;34m\\]\\w \\[\\e[0;31m\\]] \\[\\e[1;37m\\]{\\t}\\n\\$ ' """ + """
-
-export CHROMIUM_USER_FLAGS="--disk-cache-dir=/tmp/chromium-cache-{} --scroll-pixels=250 --memory-model=high --disk-cache-size={}"
+PS1='\[\e[1;32m\]\u \[\e[0;31m\] [\[\e[1;34m\]\w \[\e[1;32m\]$(__git_ps1 "(%s)")\[\e[0;31m\]] \[\e[1;37m\]{\t}\n\$ '
 
 shopt -s histappend
 PROMPT_COMMAND='history -a'
@@ -28,22 +26,28 @@ shopt -s dirspell
 
 PATH=$PATH:/opt/sublime-text2/
 
-alias l="ls -lh"
-alias ll="ls -lah"
-alias news="ls -lsaht | head -n 25"
+alias gr="grep -niIHR"
+alias htop="htop -d 2"
 
-alias m="make"
+alias l="ls -lh"
+alias lS="ls -lSh"
+alias ll="ls -lah"
+alias bigs="ls -Shal | head -n 25"
+alias news="ls -lsaht | head -n 25"
+alias hotm="ps -A -o rssize:10,time:9,%cpu:5,cmd | sort -nr | head | awk '{ printf \"%7.1f M  --- %s\n\", \$1/1024, \$4}{};'"
+alias hotc="ps -A -o rssize:10,time:9,%cpu:5,cmd --sort -%cpu | head -n 13 | awk '{ printf \"%6.1f%% --- %s\n\", \$3, \$4}{};' | tail -n 12"
+
+alias m="make -j5"
 alias n="ninja"
-alias sl="/opt/sublime-text2/sublime_text"
-alias mm="make -j{}"
+alias sl="sublime_text"
+
 alias hddfree="du -h --max-depth=1 | sort -h"
-alias ..="cd .."
-alias ...="cd ../.."
 
 source ~/.git-completion.bash
 
 bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'""".format(user_name, str(256 * 1024 * 1024), str(multiprocessing.cpu_count() + 1)), file=f)
+bind '"\e[B": history-search-forward'
+""".format(user_name, str(256 * 1024 * 1024), str(multiprocessing.cpu_count() + 1)), file=f)
 
 
 if __name__ == '__main__':

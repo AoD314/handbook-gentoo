@@ -12,7 +12,7 @@ def configure(config):
         print('hostname="neo"', file=f)
 
     with create_file(Path(config['path_to_root'], 'etc/resolv.conf')) as f:
-        print('nameserver 192.168.0.1', file=f)
+        print('nameserver 8.8.8.8', file=f)
 
 
 if __name__ == '__main__':
