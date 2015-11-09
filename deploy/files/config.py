@@ -220,7 +220,7 @@ def configure_applications(config):
         print('env-update && source /etc/profile', file=f)
 
         print('echo "Install applications ..."', file=f)
-        cmd = 'emerge -vuDN ' + ' '.join(applications_start)
+        cmd = 'emerge -vuDN1 ' + ' '.join(applications_start)
         print('echo "{}"'.format(cmd), file=f)
         print(cmd, file=f)
         print('\n', file=f)
@@ -230,6 +230,7 @@ def configure_applications(config):
         print('rc-update add cronie default', file=f)
         print('crontab /etc/crontab', file=f)
         print('rc-update add sshd default\n', file=f)
+        print('rc-update add ntpd default\n', file=f)
 
         print('echo "Update /etc/mtab..."', file=f)
         print('grep -v rootfs /proc/mounts > /etc/mtab\n', file=f)
@@ -274,7 +275,10 @@ echo "exit && cd / && umount -l /mnt/gentoo/dev{/shm,/pts,} && umount -l /mnt/ge
 """, file=f)
 
     with general.create_file(Path(config['path_to_root'], 'gentoo-install-my-tools.sh')) as f:
-        cmd = 'emerge ' + ' '.join(applications_base) + ' '.join(applications_X) + ' '.join(applications_big) + ' '.join(applications_games) + ' '.join(applications_kde)
+        cmd = 'emerge -f ' + ' '.join(applications_base) + ' '.join(applications_X) + ' '.join(applications_big) + ' '.join(applications_games) + ' '.join(applications_kde)
+        print('echo "' + cmd + '"', file=f)
+        print(cmd, file=f)
+        cmd = 'emerge -1 ' + ' '.join(applications_base) + ' '.join(applications_X) + ' '.join(applications_big) + ' '.join(applications_games) + ' '.join(applications_kde)
         print('echo "' + cmd + '"', file=f)
         print(cmd, file=f)
 

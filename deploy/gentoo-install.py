@@ -11,6 +11,9 @@ table = [
     {'name': '/music_video', 'device': '/dev/sdb2'}
 ]
 
+# http://mirror.yandex.ru/gentoo-distfiles/snapshots/portage-latest.tar.bz2
+# http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-stage3-amd64/stage3-amd64-20151105.tar.bz2
+
 config = {
     'path_to_root': '/mnt/gentoo',
     'user_name': 'aod314',
