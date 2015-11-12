@@ -18,7 +18,7 @@ applications_start = [
     'sys-kernel/genkernel',
     'app-editors/vim',
     'app-portage/eix',
-    'app-portage/layman',
+    'app-portage/cpuinfo2cpuflags',
     'x11-apps/setxkbmap',
     'app-portage/genlop',
     'app-portage/gentoolkit',
