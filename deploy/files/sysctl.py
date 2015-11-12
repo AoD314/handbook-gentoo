@@ -13,12 +13,7 @@ net.ipv4.ip_forward = 0
 net.ipv4.conf.default.rp_filter = 1
 net.ipv4.conf.all.rp_filter = 1
 
-vm.dirty_background_ratio = 50
-vm.dirty_ratio = 85
-vm.overcommit_memory = 1
-vm.overcommit_ratio = 100
 vm.swappiness=0
-vm.vfs_cache_pressure = 1000
 """, file=f)
 
 
