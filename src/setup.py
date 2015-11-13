@@ -26,7 +26,7 @@ def download_file_from_internet(path_from_internet, path_to_disk):
 
         print("progress: 100.00%\n")
         sec = time.time() - t
-        print("done. [time: {:.3f} sec    speed: {:.3f} Mb/sec]".format(sec, float(length / (1024.0 * 1024.)) / sec))
+        print("done. [time: {:.3f} sec    speed: {:.3f} Mb/sec]".format(sec, float(length / (1024.0 * 1024.0)) / sec))
 
 
 def command_line_parse():
@@ -50,7 +50,7 @@ def download_stage3():
     download_file_from_internet(path_to_stage3, 'stage3-amd64-latest.tar.bz2')
 
 
-def download_install_files(download: str) -> str:
+def download_install_files(download):
     if download in ['all', 'portage']:
         download_portage()
 
