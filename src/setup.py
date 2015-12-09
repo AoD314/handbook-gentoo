@@ -1,68 +1,92 @@
 #!/usr/bin/env python3
-import argparse
 
+from download import download_stage3
+from ask import get_answer
+from general import create_file, Dir
+
+import os
 import re
-import requests
-import time
+import subprocess
+import shutil
+import sys
+
+import make, timezone, locale, network, profile, kde
+
+def unpack_stage3(path_to_install):
+    path_to_stage3 = '/tmp/stage3-amd64-latest.tar.bz2'
+    cmd = 'tar xvjpf /tmp/stage3-amd64-latest.tar.bz2'
+
+    os.chdir(path_to_install)
+    print('installing ... ', end='')
+    sys.stdout.flush()
+
+    status, msg = subprocess.getstatusoutput(cmd)
+    msg = msg.split('\n')
+    filtered_msg = [l for l in msg if re.match('^tar', l)]
+    if status != 0:
+        print('\nerror: ', status)
+        print('message:\n', '\n'.join(filtered_msg))
+    else: 
+        print('done')
+
+    path = Dir(path_to_install)
+    shutil.copy2('/etc/resolv.conf', path.full('etc/resolv.conf'))
+
+def update_portage():
+    subprocess.getstatusoutput('emerge-webrsync')
+    subprocess.getstatusoutput('emerge --sync --quiet')
+
+def configure():
+    config = {}
+
+    user_name, email = get_answer(['user name', 'email']) 
+    login, password, root_password = get_answer(['login', 'password', 'root password'])
+
+    config['login'] = login
+    config['password'] = password
+    config['root_password'] = root_password
+    config['username'] = user_name
+    config['email'] = email
+    config['path_to_install'] = get_answer(['path to gentoo install'])
+
+    return config
+
+def apply_config_files():
+    make.configure()
+    profile.configure()
+    timezone.configure()
+    locale.configure()
+    network.configure()
+
+    # install kde
+    kde.configure()
 
 
-def download_file_from_internet(path_from_internet, path_to_disk):
-    with open(path_to_disk, 'wb') as handle:
-        t = time.time()
+def chroot(path_to_install):
+    path = Dir(path_to_install)
 
-        response = requests.get(path_from_internet, stream=True)
-        length = int(response.headers['Content-Length'])
+    os.system('mount -t proc proc  {}\n'.format(path.full('/proc')))
+    os.system('mount --rbind /sys  {}\n'.format(path.full('/sys')))
+    os.system('mount --make-rslave {}\n'.format(path.full('/sys')))
+    os.system('mount --rbind /dev  {}\n'.format(path.full('/dev')))
+    os.system('mount --make-rslave {}'.format(path.full('/dev')))
 
-        print(path_to_disk)
-        print('    size: {}  ({:.3f} Mb)'.format(length, length / (1024.0 * 1024.0)))
-        print('    data: {}'.format(response.headers['Last-Modified']))
+    os.chroot(path_to_install)
 
-        block_size = 1024 * 256  # 256 kb
-        i = 0
-        for block in response.iter_content(block_size):
-            print("progress: {:7.2%}".format(i * block_size / length))
-            i += 1
-            handle.write(block)
-
-        print("progress: 100.00%\n")
-        sec = time.time() - t
-        print("done. [time: {:.3f} sec    speed: {:.3f} Mb/sec]".format(sec, float(length / (1024.0 * 1024.0)) / sec))
-
-
-def command_line_parse():
-    parser = argparse.ArgumentParser(description='installer gentoo linux')
-    parser.add_argument('--download', choices=["all", "portage", "stage3"], help='download portage and stage3')
-    return parser.parse_args()
-
-
-def download_portage():
-    portage = 'portage-latest.tar.bz2'
-    path_to_portage = 'http://mirror.yandex.ru/gentoo-distfiles/snapshots/' + portage
-    download_file_from_internet(path_to_portage, portage)
-
-
-def download_stage3():
-    path_to_stage3 = 'http://mirror.yandex.ru/gentoo-distfiles/releases/amd64/autobuilds/current-stage3-amd64/'
-    response = requests.get(path_to_stage3)
-    text = str(response.content)
-    pattern = re.compile('<a href="stage3-amd64-(\d+).tar.bz2">')
-    path_to_stage3 = path_to_stage3 + 'stage3-amd64-{}.tar.bz2'.format(pattern.findall(text)[0])
-    download_file_from_internet(path_to_stage3, 'stage3-amd64-latest.tar.bz2')
-
-
-def download_install_files(download):
-    if download in ['all', 'portage']:
-        download_portage()
-
-    if download in ['all', 'stage3']:
-        download_stage3()
-
+    os.system('source /etc/profile')
+    os.system('export PS1="(chroot) $PS1"')
 
 def main():
-    args = command_line_parse()
-    download_install_files(args.download)
-    print(args)
+    #config = configure()
+    #download_stage3()
+    #unpack_stage3(config['path_to_install'])
+    #chroot(config['path_to_install'])
 
+    #update_portage()
+    #apply_config_files()
+
+    # passwd
+    # os.system('passwd {}'.format(config['root_password']))
 
 if __name__ == "__main__":
     main()
