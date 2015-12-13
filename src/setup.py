@@ -10,7 +10,7 @@ import subprocess
 import shutil
 import sys
 
-import make, timezone, locale, network, profile, kde
+import make, timezone, locale, network, profile, kde, repos, sysctl
 
 def unpack_stage3(path_to_install):
     path_to_stage3 = '/tmp/stage3-amd64-latest.tar.bz2'
@@ -47,12 +47,14 @@ def configure():
     config['root_password'] = root_password
     config['username'] = user_name
     config['email'] = email
-    config['path_to_install'] = get_answer(['path to gentoo install'])
+    config['path_to_install'] = get_answer(['path to gentoo install'])[0]
 
     return config
 
 def apply_config_files():
     make.configure()
+    repos.configure()
+    sysctl.configure()
     profile.configure()
     timezone.configure()
     locale.configure()
@@ -77,13 +79,13 @@ def chroot(path_to_install):
     os.system('export PS1="(chroot) $PS1"')
 
 def main():
-    #config = configure()
-    #download_stage3()
-    #unpack_stage3(config['path_to_install'])
-    #chroot(config['path_to_install'])
+    config = configure()
+    download_stage3()
+    unpack_stage3(config['path_to_install'])
+    chroot(config['path_to_install'])
 
-    #update_portage()
-    #apply_config_files()
+    update_portage()
+    apply_config_files()
 
     # passwd
     # os.system('passwd {}'.format(config['root_password']))

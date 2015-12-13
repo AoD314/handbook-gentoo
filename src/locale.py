@@ -13,7 +13,7 @@ def configure(path_to_root):
     with create_file('/etc/conf.d/consolefont') as f:
         print('consolefont="LatArCyrHeb-16"', file=f)
 
-    with create_file('/etc/conf.d/keymaps')) as f:
+    with create_file('/etc/conf.d/keymaps') as f:
         print("""
 keymap="us"
 windowkeys="yes"
@@ -28,7 +28,7 @@ fix_euro="no"
     with create_file('/etc/conf.d/keymaps') as f:
         print('clock="local"', file=f)
 
-    with create_file('/etc/ntp.conf')) as f:
+    with create_file('/etc/ntp.conf') as f:
         print("""
 # Common pool for random people
 #server pool.ntp.org

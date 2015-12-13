@@ -1,3 +1,5 @@
+import sys
+
 from general import Dir, create_file
 
 def configure():
@@ -6,5 +8,5 @@ def configure():
     
     with create_file('/etc/timezone') as f:
         print('Europe/Moscow', file=f)
-    subprocess.getstatusoutput('emerge --config sys-libs/timezone-data')
-    print('done')
+    print(subprocess.getstatusoutput('emerge --config sys-libs/timezone-data'))
+
