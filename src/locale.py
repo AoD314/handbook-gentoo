@@ -28,6 +28,7 @@ fix_euro="no"
     with create_file('/etc/conf.d/keymaps') as f:
         print('clock="local"', file=f)
 
+    print(subprocess.getoutput('emerge -1v net-misc/ntp'))
     with create_file('/etc/ntp.conf') as f:
         print("""
 # Common pool for random people
@@ -53,6 +54,7 @@ restrict default nomodify nopeer noquery limited kod
 restrict 127.0.0.1
 restrict [::1]
 """, file=f)
+    print(subprocess.getoutput('rc-update add ntpd default'))
 
     with create_file('/etc/env.d/02locale') as f:
         print("""

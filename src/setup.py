@@ -82,7 +82,7 @@ def change_password(root_password):
     passwd = subprocess.Popen(['passwd'], stdin=subprocess.PIPE,
                           stdout=open('/dev/null', 'w').fileno(),
                           stderr=subprocess.STDOUT)
-    passwd.communicate(root_password.encode('utf-8'))
+    passwd.communicate(str(root_password).encode('utf-8'))
     print("result: " + passwd.returncode)
 
 def main():
@@ -96,7 +96,7 @@ def main():
 
     change_password(config['root_password'])
 
-    os.system('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/boot,/sys,/proc,}')
+    os.system('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
 
     print('install finished !!!')
 

@@ -49,6 +49,6 @@ PORTDIR_OVERLAY="/usr/local/portage"
 MAKEOPTS="-j{}"
 EMERGE_DEFAULT_OPTS="--jobs=2 --keep-going=y "
 
-source /var/lib/layman/make.conf
+#source /var/lib/layman/make.conf
 """.format(cpu.get_flags(), cpu.get_num_cores() + 1)
         print(cmd, file=f)
