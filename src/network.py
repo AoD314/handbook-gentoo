@@ -1,9 +1,8 @@
 from general import create_file
 
-import subprocess
 import os
 
-def configure(path_to_root):
+def configure():
 
     with create_file('/etc/conf.d/hostname') as f:
         print('hostname="zion"', file=f)

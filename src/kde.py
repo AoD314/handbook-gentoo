@@ -1,6 +1,5 @@
 from general import create_file
 
-import subprocess
 import os
 
 def configure():
@@ -9,4 +8,3 @@ def configure():
 
     os.system('emerge -1v kde-apps/kdebase-meta')
     os.system('rc-update add xdm default')
-    os.system('/etc/init.d/xdm start')

@@ -72,12 +72,18 @@ def chroot(path_to_install):
     os.system('mount --rbind /dev  {}\n'.format(path.full('/dev')))
     os.system('mount --make-rslave {}'.format(path.full('/dev')))
 
-    # umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/boot,/sys,/proc,} 
-
     os.chroot(path_to_install)
 
     os.system('source /etc/profile')
     os.system('export PS1="(chroot) $PS1"')
+
+
+def change_password(root_password):
+    passwd = subprocess.Popen(['passwd'], stdin=subprocess.PIPE,
+                          stdout=open('/dev/null', 'w').fileno(),
+                          stderr=subprocess.STDOUT)
+    passwd.communicate(root_password.encode('utf-8'))
+    print("result: " + passwd.returncode)
 
 def main():
     config = configure()
@@ -88,8 +94,11 @@ def main():
     update_portage()
     apply_config_files()
 
-    # passwd
-    # os.system('passwd {}'.format(config['root_password']))
+    change_password(config['root_password'])
+
+    os.system('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/boot,/sys,/proc,}')
+
+    print('install finished !!!')
 
 if __name__ == "__main__":
     main()
