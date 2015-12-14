@@ -60,8 +60,8 @@ LANG="en_US.UTF-8"
 LC_COLLATE="C"
 """, file=f)
 
-    subprocess.getstatusoutput('locale-gen')
-    subprocess.getstatusoutput('env-update && source /etc/profile')
+    print(subprocess.getoutput('locale-gen'))
+    print(subprocess.getoutput('env-update && source /etc/profile'))
 
     print('Keyboard configure ... ', end='')
     subprocess.getstatusoutput('setxkbmap -layout "us,ru(winkeys)" -option grp:caps_toggle,grp_led:caps')

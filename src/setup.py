@@ -56,8 +56,8 @@ def apply_config_files():
     sysctl.configure()
     profile.configure()
     timezone.configure()
-    locale.configure()
     network.configure()
+    locale.configure()
 
     # install kde
     kde.configure()
@@ -71,6 +71,8 @@ def chroot(path_to_install):
     os.system('mount --make-rslave {}\n'.format(path.full('/sys')))
     os.system('mount --rbind /dev  {}\n'.format(path.full('/dev')))
     os.system('mount --make-rslave {}'.format(path.full('/dev')))
+
+    # umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/boot,/sys,/proc,} 
 
     os.chroot(path_to_install)
 
