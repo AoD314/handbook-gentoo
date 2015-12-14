@@ -5,9 +5,6 @@ from general import create_file
 from cpu import CPU
 
 def configure():
-    print('configure make.conf ... ')
-    sys.stdout.flush()
-    
     with create_file('/etc/portage/make.conf') as f:
         cpu = CPU()
         cmd  = """
@@ -55,5 +52,3 @@ EMERGE_DEFAULT_OPTS="--jobs=2 --keep-going=y "
 source /var/lib/layman/make.conf
 """.format(cpu.get_flags(), cpu.get_num_cores() + 1)
         print(cmd, file=f)
-
-    print('ok')

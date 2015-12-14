@@ -39,8 +39,7 @@ def update_portage():
 def configure():
     config = {}
 
-    user_name, email = get_answer(['user name', 'email']) 
-    login, password, root_password = get_answer(['login', 'password', 'root password'])
+    user_name, email, login, password, root_password = get_answer(['user name', 'email', 'login', 'password', 'root password'])
 
     config['login'] = login
     config['password'] = password

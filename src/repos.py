@@ -3,9 +3,6 @@ import sys
 from general import Dir, create_file
 
 def configure():
-    print('configure repos.conf ... ', end='')
-    sys.stdout.flush()
-    
     with create_file('/etc/portage/repos.conf/gentoo.conf') as f:
         print("""
 [gentoo]

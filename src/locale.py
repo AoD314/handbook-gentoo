@@ -2,7 +2,7 @@ from general import create_file
 
 import subprocess
 
-def configure(path_to_root):
+def configure():
 
     with create_file('/etc/locale.gen') as f:
         print('ru_RU.UTF-8 UTF-8\nen_US.UTF-8 UTF-8', file=f)
