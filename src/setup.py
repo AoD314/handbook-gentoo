@@ -2,7 +2,7 @@
 
 from download import download_stage3
 from ask import get_answer
-from general import create_file, Dir
+from general import create_file, Dir, run_command
 
 import os
 import re
@@ -33,8 +33,10 @@ def unpack_stage3(path_to_install):
     shutil.copy2('/etc/resolv.conf', path.full('etc/resolv.conf'))
 
 def update_portage():
-    subprocess.getstatusoutput('emerge-webrsync')
-    subprocess.getstatusoutput('emerge --sync --quiet')
+    run_command('emerge-webrsync')
+    run_command('emerge --sync --quiet')
+    run_command('emerge eix')
+    run_command('eix-sync --quiet')
 
 def configure():
     config = {}
