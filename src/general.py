@@ -1,5 +1,6 @@
 
 import subprocess
+import sys
 
 from pathlib import Path
 
@@ -23,6 +24,7 @@ def create_file(file_name):
 
 def run_command(cmd):
     print(cmd, end='')
+    sys.stdout.flush()
     (status, output) = subprocess.getstatusoutput(cmd)
     print(' (status: ' + str(status) + ')')
     print(output)
