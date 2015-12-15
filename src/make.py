@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.4
 
 import sys
-from general import create_file
+from general import create_file, run_command
 from cpu import CPU
 
 def configure():
@@ -29,10 +29,9 @@ USE="threads policykit consolekit utf8 ipv6"
 
 USE="${{USE}} qt4 -gtk -gtk3 wayland egl gles opengl "
 USE="${{USE}} ffmpeg -libav -vlc "
-USE="${{USE}} postgres "
 USE="${{USE}} udev -systemd "
 USE="${{USE}} -java -ruby "
-USE="${{USE}} -sqlite -mysql "
+USE="${{USE}} -sqlite -mysql postgres "
 USE="${{USE}} -pam -semantic-desktop "
 USE="${{USE}} pulseaudio alsa "
 
@@ -53,3 +52,5 @@ EMERGE_DEFAULT_OPTS="--jobs=2 --keep-going=y "
 #source /var/lib/layman/make.conf
 """.format(cpu.get_flags(), cpu.get_num_cores() + 1)
         print(cmd, file=f)
+
+    run_command('emerge -1v app-portage/cpuinfo2cpuflags')
