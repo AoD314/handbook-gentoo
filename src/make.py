@@ -29,6 +29,7 @@ USE="threads policykit consolekit utf8 ipv6"
 
 USE="${{USE}} qt4 -gtk -gtk3 wayland egl gles opengl "
 USE="${{USE}} ffmpeg -libav -vlc "
+USE="${{USE}} postgres "
 USE="${{USE}} udev -systemd "
 USE="${{USE}} -java -ruby "
 USE="${{USE}} -sqlite -mysql "

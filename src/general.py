@@ -1,6 +1,7 @@
 
-from pathlib import Path
+import subprocess
 
+from pathlib import Path
 
 def create_dir(dir_name):
     name = Path(dir_name)
@@ -18,6 +19,13 @@ def create_file(file_name):
         name.unlink()
     print('create file ' + str(name))
     return open(str(name), 'w')
+
+
+def run_command(cmd):
+    (status, output) = subprocess.getstatusoutput(cmd)
+    print(cmd + ' (status: ' + status + ')')
+    print(output)
+    print('\n')
 
 
 def configure_print(name):

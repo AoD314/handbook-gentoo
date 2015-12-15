@@ -1,10 +1,11 @@
 import sys
 import subprocess
 
-from general import Dir, create_file
+from general import create_file, run_command
 
 def configure():
     with create_file('/etc/timezone') as f:
         print('Europe/Moscow', file=f)
-    print(subprocess.getoutput('emerge --config sys-libs/timezone-data'))
+
+    run_command('emerge --config sys-libs/timezone-data')
 

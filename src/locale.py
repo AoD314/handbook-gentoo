@@ -1,4 +1,4 @@
-from general import create_file
+from general import create_file, run_command
 
 import subprocess
 
@@ -28,7 +28,8 @@ fix_euro="no"
     with create_file('/etc/conf.d/keymaps') as f:
         print('clock="local"', file=f)
 
-    print(subprocess.getoutput('emerge -1v net-misc/ntp'))
+    run_command('emerge -1v net-misc/ntp')
+
     with create_file('/etc/ntp.conf') as f:
         print("""
 # Common pool for random people
@@ -54,7 +55,8 @@ restrict default nomodify nopeer noquery limited kod
 restrict 127.0.0.1
 restrict [::1]
 """, file=f)
-    print(subprocess.getoutput('rc-update add ntpd default'))
+
+    run_command('rc-update add ntpd default')
 
     with create_file('/etc/env.d/02locale') as f:
         print("""
@@ -62,11 +64,8 @@ LANG="en_US.UTF-8"
 LC_COLLATE="C"
 """, file=f)
 
-    print(subprocess.getoutput('locale-gen'))
-    print(subprocess.getoutput('env-update && source /etc/profile'))
-
-    print('Keyboard configure ... ', end='')
-    subprocess.getstatusoutput('setxkbmap -layout "us,ru(winkeys)" -option grp:caps_toggle,grp_led:caps')
-    print(' ')
+    run_command('locale-gen')
+    run_command('env-update && source /etc/profile')
+    run_command('setxkbmap -layout "us,ru(winkeys)" -option grp:caps_toggle,grp_led:caps')
 
 
