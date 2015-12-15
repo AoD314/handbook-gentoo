@@ -36,7 +36,7 @@ def update_portage():
     run_command('emerge-webrsync')
     run_command('emerge --sync --quiet')
     run_command('emerge eix')
-    run_command('eix-sync --quiet')
+    run_command('eix-sync -q -H')
 
 def configure():
     config = {}

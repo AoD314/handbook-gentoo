@@ -22,6 +22,7 @@ def get_answer(d):
             a = input()
         if a == 'y':
             is_corrent = True
+        print('')
         elif a == 'q':
             raise Exception('exit from question')
 

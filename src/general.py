@@ -22,8 +22,9 @@ def create_file(file_name):
 
 
 def run_command(cmd):
+    print(cmd, end='')
     (status, output) = subprocess.getstatusoutput(cmd)
-    print(cmd + ' (status: ' + status + ')')
+    print(' (status: ' + str(status) + ')')
     print(output)
     print('\n')
 
