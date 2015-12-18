@@ -54,15 +54,6 @@ def configure():
 
 def apply_config_files():
     make.configure()
-
-    # tests
-
-    print('\n*****\nos:\n')
-    os.system('cat /etc/portage/make.conf')
-    print('\n*****\nsub:\n')
-    (status, output) = subprocess.getstatusoutput('cat /etc/portage/make.conf')
-    print(output)
-
     repos.configure()
     sysctl.configure()
     profile.configure()

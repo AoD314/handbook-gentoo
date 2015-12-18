@@ -5,6 +5,9 @@ from general import create_file, run_command
 from cpu import CPU
 
 def configure():
+
+    run_command('emerge -1v app-portage/cpuinfo2cpuflags')
+
     with create_file('/etc/portage/make.conf') as f:
         cpu = CPU()
         cmd  = """
@@ -52,5 +55,3 @@ EMERGE_DEFAULT_OPTS="--jobs=2 --keep-going=y "
 #source /var/lib/layman/make.conf
 """.format(cpu.get_flags(), cpu.get_num_cores() + 1)
         print(cmd, file=f)
-
-    run_command('emerge -1v app-portage/cpuinfo2cpuflags')
