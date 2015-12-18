@@ -28,7 +28,7 @@ def run_command(cmd):
     print(cmd, end='')
     sys.stdout.flush()
     (status, output) = subprocess.getstatusoutput(cmd)
-    print(' (status: ' + status + ')')
+    print(' (status: ' + str(status) + ')')
     print(output)
     print('\n')
 
