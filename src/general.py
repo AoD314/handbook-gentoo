@@ -25,10 +25,18 @@ def create_file(file_name):
 
 def run_command(cmd):
     #os.system(cmd)
-    print(cmd, end='')
-    sys.stdout.flush()
-    (status, output) = subprocess.getstatusoutput(cmd)
-    print(' (status: ' + str(status) + ')')
+    print(cmd)
+    #(status, output) = subprocess.getstatusoutput(cmd)
+
+    proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
+    while True:
+        line = proc.stdout.readline()
+        if line != '':
+            print(print(str(line.strip())[2:-1]))
+        else:
+            break
+
+    print(' (status: ' + str(proc.returncode) + ')')
     print(output)
     print('\n')
 
