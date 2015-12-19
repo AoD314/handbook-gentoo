@@ -85,7 +85,7 @@ def change_password(root_password):
                           stdout=open('/dev/null', 'w').fileno(),
                           stderr=subprocess.STDOUT)
     passwd.communicate(str(root_password).encode('utf-8'))
-    print("result: " + passwd.returncode)
+    print("result: " + str(passwd.returncode))
 
 def main():
     config = configure()

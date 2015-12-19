@@ -30,7 +30,7 @@ CHOST="x86_64-pc-linux-gnu"
 
 USE="threads policykit consolekit utf8 ipv6"
 
-USE="${{USE}} qt4 -gtk -gtk3 wayland egl gles opengl "
+USE="${{USE}} qt4 -gtk -gtk3 wayland egl gles gles2 opengl "
 USE="${{USE}} ffmpeg -libav -vlc "
 USE="${{USE}} udev -systemd "
 USE="${{USE}} -java -ruby "
@@ -47,7 +47,7 @@ PORTAGE_TMPDIR=/tmp
 PORTDIR="/usr/portage"
 DISTDIR="${{PORTDIR}}/distfiles"
 PKGDIR="${{PORTDIR}}/packages"
-PORTDIR_OVERLAY="/usr/local/portage"
+#PORTDIR_OVERLAY="/usr/local/portage"
 
 MAKEOPTS="-j{}"
 EMERGE_DEFAULT_OPTS="--jobs=2 --keep-going=y "

@@ -26,6 +26,7 @@ def create_file(file_name):
 def run_command(cmd):
     #os.system(cmd)
     print(cmd)
+    print('_' * 120)
     #(status, output) = subprocess.getstatusoutput(cmd)
 
     proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
@@ -36,9 +37,9 @@ def run_command(cmd):
         else:
             break
 
-    print(' (status: ' + str(proc.returncode) + ')')
     print(output)
-    print('\n')
+    print('\n----> (status: ' + str(proc.returncode) + ')')
+    print('\n\n')
 
 
 def configure_print(name):
