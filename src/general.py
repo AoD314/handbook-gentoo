@@ -32,7 +32,7 @@ def run_command(cmd):
     proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
     while True:
         line = proc.stdout.readline()
-        if line != '':
+        if len(line) > 2:
             print(print(str(line.strip())[2:-1]))
         else:
             break
