@@ -28,17 +28,17 @@ def run_command(cmd):
     print(cmd)
     print('_' * 120)
     #(status, output) = subprocess.getstatusoutput(cmd)
+    #print(output)
 
-    proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE, shell=True)
-    while True:
+    proc = subprocess.Popen(str(cmd), stdout=subprocess.PIPE)
+    line = ' '
+    while line:
         line = proc.stdout.readline()
-        if len(line) > 2:
-            print(print(str(line.strip())[2:-1]))
-        else:
-            break
+        if line:
+            print(line.strip())
+    status = proc.returncode
 
-    print(output)
-    print('\n----> (status: ' + str(proc.returncode) + ')')
+    print('\n----> (status: ' + str(status) + ')')
     print('\n\n')
 
 

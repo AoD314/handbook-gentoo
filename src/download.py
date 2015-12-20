@@ -10,10 +10,11 @@ def download_file_from_internet(path_from_internet, path_to_disk):
         response = requests.get(path_from_internet, stream=True)
         length = int(response.headers['Content-Length'])
 
-        print(path_to_disk)
-        print('    source: {}'.format(path_from_internet))
-        print('    size  : {}  ({:.3f} Mb)'.format(length, length / (1024.0 * 1024.0)))
-        print('    data  : {}'.format(response.headers['Last-Modified']))
+        print('Downloading ... ')
+        print('destination: {}'.format(path_to_disk))
+        print('     source: {}'.format(path_from_internet))
+        print('     size  : {}  ({:.3f} Mb)'.format(length, length / (1024.0 * 1024.0)))
+        print('     data  : {}'.format(response.headers['Last-Modified']))
 
         block_size = min(max(length >> 10, 1024 * 16), 1024 * 1024 * 16) # block_size = [16kb ... 16mb]
         i = 0
