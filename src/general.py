@@ -36,7 +36,7 @@ def run_command(cmd):
         line = proc.stdout.readline()
         if not line: break
 
-        line = line.strip().decode()
+        line = line.decode('utf-8').strip()
         print(line)
 
     status = proc.returncode
