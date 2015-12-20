@@ -16,12 +16,13 @@ def download_file_from_internet(path_from_internet, path_to_disk):
         print('     size  : {}  ({:.3f} Mb)'.format(length, length / (1024.0 * 1024.0)))
         print('     data  : {}'.format(response.headers['Last-Modified']))
 
-        block_size = min(max(length >> 10, 1024 * 16), 1024 * 1024 * 16) # block_size = [16kb ... 16mb]
-        i = 0
-        for block in response.iter_content(block_size):
-            print("progress: {:7.2%} (left: {:10.3f} Mb)".format(i * block_size / length, (length - i * block_size) / (1024.0 * 1024.0)), end='\r')
-            i += 1
-            handle.write(block)
+        if not os.path.exists(path_to_disk) or os.path.getsize(path_to_disk) != length:
+            block_size = min(max(length >> 10, 1024 * 16), 1024 * 1024 * 16) # block_size = [16kb ... 16mb]
+            i = 0
+            for block in response.iter_content(block_size):
+                print("progress: {:7.2%} (left: {:10.3f} Mb)".format(i * block_size / length, (length - i * block_size) / (1024.0 * 1024.0)), end='\r')
+                i += 1
+                handle.write(block)
 
         print("progress: 100.00%" + " " * 50 + '\n')
         sec = time.time() - t

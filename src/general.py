@@ -30,7 +30,7 @@ def run_command(cmd):
     #(status, output) = subprocess.getstatusoutput(cmd)
     #print(output)
 
-    proc = subprocess.Popen(str(cmd), stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
     line = ' '
     while True:
         line = proc.stdout.readline()

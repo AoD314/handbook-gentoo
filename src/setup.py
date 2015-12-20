@@ -88,19 +88,21 @@ def change_password(root_password):
     print("result: " + str(passwd.returncode))
 
 def main():
-    config = configure()
-    download_stage3()
-    unpack_stage3(config['path_to_install'])
-    chroot(config['path_to_install'])
+    try:
+        config = configure()
+        download_stage3()
+        unpack_stage3(config['path_to_install'])
+        chroot(config['path_to_install'])
 
-    update_portage()
-    apply_config_files()
+        update_portage()
+        apply_config_files()
 
-    change_password(config['root_password'])
-
-    os.system('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
-
-    print('install finished !!!')
+        change_password(config['root_password'])
+    finally:
+        print('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
+        os.system('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
+    else:
+        print('install finished !!!')
 
 if __name__ == "__main__":
     main()
