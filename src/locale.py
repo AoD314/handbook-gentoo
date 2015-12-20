@@ -66,6 +66,7 @@ LC_COLLATE="C"
 
     run_command('locale-gen')
     run_command('env-update && source /etc/profile')
+    run_command('emerge -1v x11-apps/setxkbmap')
     run_command('setxkbmap -layout "us,ru(winkeys)" -option grp:caps_toggle,grp_led:caps')
 
 

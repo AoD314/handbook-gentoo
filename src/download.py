@@ -17,7 +17,7 @@ def download_file_from_internet(path_from_internet, path_to_disk):
         print('     size  : {}  ({:.3f} Mb)'.format(length, length / (1024.0 * 1024.0)))
         print('     data  : {}'.format(response.headers['Last-Modified']))
 
-        if not os.path.exists(path_to_disk) or os.path.getsize(path_to_disk) != length:
+        if not os.path.exists(path_to_disk):
             block_size = min(max(length >> 10, 1024 * 16), 1024 * 1024 * 16) # block_size = [16kb ... 16mb]
             i = 0
             for block in response.iter_content(block_size):
