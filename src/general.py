@@ -36,9 +36,7 @@ def run_command(cmd):
         line = proc.stdout.readline()
         if not line: break
 
-        line = line.strip()
-        if line[:2] == "b'":
-            line = line[2:-1]
+        line = line.strip().decode('utf-8')
         print(line)
 
     status = proc.returncode
