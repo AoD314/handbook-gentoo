@@ -33,7 +33,7 @@ def unpack_stage3(path_to_install):
     shutil.copy2('/etc/resolv.conf', path.full('etc/resolv.conf'))
 
 def update_portage():
-    run_command('emerge-webrsync')
+    run_command('emerge-webrsync --revert')
     run_command('emerge --sync --quiet')
     run_command('emerge eix')
     run_command('eix-sync -q -H')
