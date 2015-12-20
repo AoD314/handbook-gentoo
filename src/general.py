@@ -29,7 +29,7 @@ def run_command(cmd):
     print('_' * 120)
     #(status, output) = subprocess.getstatusoutput(cmd)
 
-    proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
+    proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE, shell=True)
     while True:
         line = proc.stdout.readline()
         if len(line) > 2:
