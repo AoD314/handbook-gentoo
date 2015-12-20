@@ -33,7 +33,7 @@ def unpack_stage3(path_to_install):
     shutil.copy2('/etc/resolv.conf', path.full('etc/resolv.conf'))
 
 def update_portage():
-    run_command('emerge-webrsync --revert')
+    run_command('emerge-webrsync')
     run_command('emerge --sync --quiet')
     run_command('emerge eix')
     run_command('eix-sync -q -H')
@@ -98,11 +98,10 @@ def main():
         apply_config_files()
 
         change_password(config['root_password'])
+
     finally:
         print('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
         os.system('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
-    else:
-        print('install finished !!!')
 
 if __name__ == "__main__":
     main()
