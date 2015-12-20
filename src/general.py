@@ -32,10 +32,15 @@ def run_command(cmd):
 
     proc = subprocess.Popen(str(cmd), stdout=subprocess.PIPE)
     line = ' '
-    while line:
+    while True:
         line = proc.stdout.readline()
-        if line:
-            print(line.strip())
+        if not line: break
+
+        line = line.strip()
+        if line[:2] == "b'":
+            line = line[2:-1]
+        print(line)
+
     status = proc.returncode
 
     print('\n----> (status: ' + str(status) + ')')
