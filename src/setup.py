@@ -17,6 +17,12 @@ def unpack_stage3(path_to_install):
     cmd = 'tar xvjpf /tmp/stage3-amd64-latest.tar.bz2'
 
     os.chdir(path_to_install)
+
+    print('cleaning ... ', end='')
+    sys.stdout.flush()
+    os.system('rm -rf *')
+    print('done')
+
     print('installing ... ', end='')
     sys.stdout.flush()
 
@@ -41,14 +47,20 @@ def update_portage():
 def configure():
     config = {}
 
-    user_name, email, login, password, root_password = get_answer(['user name', 'email', 'login', 'password', 'root password'])
+    # user_name, email, login, password, root_password = get_answer(['user name', 'email', 'login', 'password', 'root password'])
+    # config['login'] = login
+    # config['password'] = password
+    # config['root_password'] = root_password
+    # config['username'] = user_name
+    # config['email'] = email
+    # config['path_to_install'] = get_answer(['path to gentoo install'])[0]
 
-    config['login'] = login
-    config['password'] = password
-    config['root_password'] = root_password
-    config['username'] = user_name
-    config['email'] = email
-    config['path_to_install'] = get_answer(['path to gentoo install'])[0]
+    config['login'] = 'user'
+    config['password'] = '123'
+    config['root_password'] = '123'
+    config['username'] = 'User User'
+    config['email'] = 'user@e-mail.com'
+    config['path_to_install'] = '/mnt/gentoo'
 
     return config
 
@@ -70,9 +82,7 @@ def chroot(path_to_install):
 
     os.system('mount -t proc proc  {}\n'.format(path.full('/proc')))
     os.system('mount --rbind /sys  {}\n'.format(path.full('/sys')))
-    os.system('mount --make-rslave {}\n'.format(path.full('/sys')))
     os.system('mount --rbind /dev  {}\n'.format(path.full('/dev')))
-    os.system('mount --make-rslave {}'.format(path.full('/dev')))
 
     os.chroot(path_to_install)
 
@@ -100,8 +110,8 @@ def main():
         change_password(config['root_password'])
 
     finally:
-        print('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
-        os.system('umount -l /mnt/gentoo/dev{/shm,/pts,} && umount /mnt/gentoo{/sys,/proc}')
+        print('umount -l /mnt/gentoo/dev && umount /mnt/gentoo{/sys,/proc}')
+        os.system('umount -l /mnt/gentoo/dev && umount /mnt/gentoo{/sys,/proc}')
 
 if __name__ == "__main__":
     main()
