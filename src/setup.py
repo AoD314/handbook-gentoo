@@ -74,7 +74,10 @@ def apply_config_files():
     locale.configure()
 
     # install kde
-    kde.configure()
+    #kde.configure()
+
+    # install last
+    run_command('emerge -1v sys-kernel/gentoo-sources sys-boot/grub')
 
 
 def chroot(path_to_install):
@@ -98,20 +101,16 @@ def change_password(root_password):
     print("result: " + str(passwd.returncode))
 
 def main():
-    try:
-        config = configure()
-        download_stage3()
-        unpack_stage3(config['path_to_install'])
-        chroot(config['path_to_install'])
+    config = configure()
+    download_stage3()
+    unpack_stage3(config['path_to_install'])
+    chroot(config['path_to_install'])
 
-        update_portage()
-        apply_config_files()
+    update_portage()
+    apply_config_files()
 
-        change_password(config['root_password'])
+    change_password(config['root_password'])
 
-    finally:
-        print('umount -l /mnt/gentoo/dev && umount /mnt/gentoo{/sys,/proc}')
-        os.system('umount -l /mnt/gentoo/dev && umount /mnt/gentoo{/sys,/proc}')
 
 if __name__ == "__main__":
     main()

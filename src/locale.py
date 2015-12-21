@@ -58,6 +58,11 @@ restrict [::1]
 
     run_command('rc-update add ntpd default')
 
+    with create_file('/etc/profile.d/xdg_cache_home.sh') as f:
+        print("""
+export XDG_CACHE-HOME="/tmp/${USER}/.cache"
+""", file=f)
+
     with create_file('/etc/env.d/02locale') as f:
         print("""
 LANG="en_US.UTF-8"
@@ -65,7 +70,8 @@ LC_COLLATE="C"
 """, file=f)
 
     run_command('locale-gen')
-    run_command('env-update && source /etc/profile')
+    run_command('env-update')
+    run_command('source /etc/profile')
     run_command('emerge -1v x11-apps/setxkbmap')
     run_command('setxkbmap -layout "us,ru(winkeys)" -option grp:caps_toggle,grp_led:caps')
 

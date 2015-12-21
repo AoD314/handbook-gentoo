@@ -11,5 +11,4 @@ sync-type=git
 sync-uri=https://github.com/gentoo-mirror/gentoo
 auto-sync=true
 """, file=f)
-    print('ok')
 

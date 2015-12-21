@@ -25,24 +25,25 @@ def create_file(file_name):
 
 def run_command(cmd):
     #os.system(cmd)
+    print('_' * 120)
     print(cmd)
+    print('_' * 120)
+    os.system(cmd)
     print('_' * 120)
     #(status, output) = subprocess.getstatusoutput(cmd)
     #print(output)
 
-    proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
-    line = ' '
-    while True:
-        line = proc.stdout.readline()
-        if not line: break
+    #proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
+    #line = ' '
+    #while True:
+    #    line = proc.stdout.readline()
+    #    if not line: break
+    #    line = line.decode('utf-8').strip()
+    #    print(line.encode('utf-8'))
 
-        line = line.decode('utf-8').strip()
-        print(line.encode('utf-8'))
-
-    status = proc.returncode
-
-    print('\n----> (status: ' + str(status) + ')')
-    print('\n\n')
+    #status = proc.returncode
+    #print('\n----> (status: ' + str(status) + ')')
+    #print('\n\n')
 
 
 def configure_print(name):
