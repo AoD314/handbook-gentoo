@@ -47,20 +47,20 @@ def update_portage():
 def configure():
     config = {}
 
-    # user_name, email, login, password, root_password = get_answer(['user name', 'email', 'login', 'password', 'root password'])
-    # config['login'] = login
-    # config['password'] = password
-    # config['root_password'] = root_password
-    # config['username'] = user_name
-    # config['email'] = email
-    # config['path_to_install'] = get_answer(['path to gentoo install'])[0]
+    user_name, email, login, password, root_password = get_answer(['user name', 'email', 'login', 'password', 'root password'])
+    config['login'] = login
+    config['password'] = password
+    config['root_password'] = root_password
+    config['username'] = user_name
+    config['email'] = email
+    config['path_to_install'] = get_answer(['path to gentoo install'])[0]
 
-    config['login'] = 'user'
-    config['password'] = '123'
-    config['root_password'] = '123'
-    config['username'] = 'User User'
-    config['email'] = 'user@e-mail.com'
-    config['path_to_install'] = '/mnt/gentoo'
+    # config['login'] = 'user'
+    # config['password'] = '123'
+    # config['root_password'] = '123'
+    # config['username'] = 'User User'
+    # config['email'] = 'user@e-mail.com'
+    # config['path_to_install'] = '/mnt/gentoo'
 
     return config
 
@@ -78,6 +78,10 @@ def apply_config_files():
 
     # install last
     run_command('emerge -1v sys-kernel/gentoo-sources sys-boot/grub')
+
+    run_command('emerge -1v app-admin/syslog-ng sys-process/cronie app-editors/vim app-portage/genlop sys-process/htop')
+
+
 
 
 def chroot(path_to_install):
