@@ -1,6 +1,5 @@
-import sys
-
 from general import create_file
+
 
 def configure():
     with create_file('/etc/sysctl.conf') as f:

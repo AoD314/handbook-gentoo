@@ -2,6 +2,7 @@
 
 import sys
 
+
 def get_answer(d):
     answers = []
     is_corrent = False
@@ -16,7 +17,7 @@ def get_answer(d):
         print("\nresults:")
         for i, q in enumerate(d):
             format_str = "{:>%ds} : [{}]" % max_len_q
-            print (format_str.format(q, answers[i]))
+            print(format_str.format(q, answers[i]))
 
         a = '?'
         while a not in ['y', 'n', 'q']:
@@ -30,9 +31,10 @@ def get_answer(d):
 
     return answers
 
+
 def main():
     name, email = get_answer(['user name', 'e-mail'])
-    print (name, email)
+    print(name, email)
 
 if __name__ == "__main__":
     main()

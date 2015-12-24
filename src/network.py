@@ -2,6 +2,7 @@ from general import create_file
 
 import os
 
+
 def configure():
 
     with create_file('/etc/conf.d/hostname') as f:

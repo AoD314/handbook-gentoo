@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.4
 
-import sys
 from general import create_file, run_command
 from cpu import CPU
+
 
 def configure():
 
@@ -10,7 +10,7 @@ def configure():
 
     with create_file('/etc/portage/make.conf') as f:
         cpu = CPU()
-        cmd  = """
+        cmd = """
 # see /usr/share/portage/config/make.conf.example
 
 CPU_FLAGS_X86="{}"

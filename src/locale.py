@@ -1,6 +1,5 @@
 from general import create_file, run_command
 
-import subprocess
 
 def configure():
 
@@ -74,5 +73,3 @@ LC_COLLATE="C"
     run_command('source /etc/profile')
     run_command('emerge -1v x11-apps/setxkbmap')
     run_command('setxkbmap -layout "us,ru(winkeys)" -option grp:caps_toggle,grp_led:caps')
-
-
