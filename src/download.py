@@ -6,7 +6,7 @@ import time
 
 
 def download_file_from_internet(path_from_internet, path_to_disk):
-    if not os.path.exists(path_to_disk):
+    if not os.path.exists(path_to_disk) or os.path.getsize(path_to_disk) < 314:
         try:
             with open(path_to_disk, 'wb') as handle:
                 t = time.time()
