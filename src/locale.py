@@ -24,9 +24,6 @@ fix_euro="no"
     with create_file('/etc/conf.d/hwclock') as f:
         print('clock="local"', file=f)
 
-    with create_file('/etc/conf.d/keymaps') as f:
-        print('clock="local"', file=f)
-
     run_command('emerge -1v net-misc/ntp')
 
     with create_file('/etc/ntp.conf') as f:
