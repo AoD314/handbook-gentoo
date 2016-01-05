@@ -2,7 +2,8 @@
 
 from download import download_stage3
 from ask import get_answer
-from general import create_file, Dir, run_command
+from general import Dir
+from general import run_command
 
 import os
 import re
@@ -10,11 +11,18 @@ import subprocess
 import shutil
 import sys
 
-import make, timezone, locale, network, profile, kde, repos, sysctl
+import make
+import timezone
+import locale
+import network
+import profile
+import repos
+import sysctl
+
 
 def unpack_stage3(path_to_install):
     path_to_stage3 = '/tmp/stage3-amd64-latest.tar.bz2'
-    cmd = 'tar xvjpf /tmp/stage3-amd64-latest.tar.bz2'
+    cmd = 'tar xvjpf ' + path_to_stage3
 
     os.chdir(path_to_install)
 
@@ -32,17 +40,19 @@ def unpack_stage3(path_to_install):
     if status != 0:
         print('\nerror: ', status)
         print('message:\n', '\n'.join(filtered_msg))
-    else: 
+    else:
         print('done')
 
     path = Dir(path_to_install)
     shutil.copy2('/etc/resolv.conf', path.full('etc/resolv.conf'))
+
 
 def update_portage():
     run_command('emerge-webrsync')
     run_command('emerge --sync --quiet')
     run_command('emerge eix')
     run_command('eix-sync -q -H')
+
 
 def configure():
     config = {}
@@ -64,6 +74,7 @@ def configure():
 
     return config
 
+
 def apply_config_files():
     make.configure()
     repos.configure()
@@ -82,8 +93,6 @@ def apply_config_files():
     run_command('emerge -1v app-admin/syslog-ng sys-process/cronie app-editors/vim app-portage/genlop sys-process/htop')
 
 
-
-
 def chroot(path_to_install):
     path = Dir(path_to_install)
 
@@ -98,11 +107,10 @@ def chroot(path_to_install):
 
 
 def change_password(root_password):
-    passwd = subprocess.Popen(['passwd'], stdin=subprocess.PIPE,
-                          stdout=open('/dev/null', 'w').fileno(),
-                          stderr=subprocess.STDOUT)
+    passwd = subprocess.Popen(['passwd'], stdin=subprocess.PIPE, stdout=open('/dev/null', 'w').fileno(), stderr=subprocess.STDOUT)
     passwd.communicate(str(root_password).encode('utf-8'))
     print("result: " + str(passwd.returncode))
+
 
 def main():
     config = configure()
