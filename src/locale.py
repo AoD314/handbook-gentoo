@@ -10,7 +10,7 @@ def configure():
         print('LANG="en_US.UTF-8"', file=f)
 
     with create_file('/etc/conf.d/consolefont') as f:
-        print('consolefont="LatArCyrHeb-16"', file=f)
+        print('consolefont="LatArCyrHeb-14"', file=f)
 
     with create_file('/etc/conf.d/keymaps') as f:
         print("""

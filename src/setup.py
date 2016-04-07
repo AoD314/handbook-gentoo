@@ -84,29 +84,28 @@ def apply_config_files():
     network.configure()
     locale.configure()
 
-    # install kde
-    #kde.configure()
+    # install X11
+    kde.configure()
 
     # install last
     run_command('emerge -1v sys-kernel/gentoo-sources sys-boot/grub')
-
     run_command('emerge -1v app-admin/syslog-ng sys-process/cronie app-editors/vim app-portage/genlop sys-process/htop')
 
 
 def chroot(path_to_install):
     path = Dir(path_to_install)
-
     os.system('mount -t proc proc  {}\n'.format(path.full('/proc')))
     os.system('mount --rbind /sys  {}\n'.format(path.full('/sys')))
     os.system('mount --rbind /dev  {}\n'.format(path.full('/dev')))
-
     os.chroot(path_to_install)
-
     os.system('source /etc/profile')
     os.system('export PS1="(chroot) $PS1"')
 
 
 def change_password(root_password):
+    print('*' * 120)
+    print("Please change root password !!!!!")
+    print('*' * 120)
     passwd = subprocess.Popen(['passwd'], stdin=subprocess.PIPE, stdout=open('/dev/null', 'w').fileno(), stderr=subprocess.STDOUT)
     passwd.communicate(str(root_password).encode('utf-8'))
     print("result: " + str(passwd.returncode))

@@ -8,4 +8,4 @@ def configure():
     with create_file('/etc/conf.d/xdm') as f:
         print('DISPLAYMANAGER="kdm"', file=f)
 
-    run_command('emerge -1v kde-apps/kdebase-meta')
+    #run_command('emerge -1v kde-apps/kdebase-meta')
