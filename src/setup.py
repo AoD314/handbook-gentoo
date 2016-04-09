@@ -11,13 +11,14 @@ import subprocess
 import shutil
 import sys
 
-import make
-import timezone
+import fstab
 import locale
+import make
 import network
 import profile
 import repos
 import sysctl
+import timezone
 
 
 def unpack_stage3(path_to_install):
@@ -83,6 +84,7 @@ def apply_config_files():
     timezone.configure()
     network.configure()
     locale.configure()
+    fstab.configure()
 
     # install X11
     kde.configure()
