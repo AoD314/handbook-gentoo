@@ -113,10 +113,17 @@ def change_password(root_password):
     print("result: " + str(passwd.returncode))
 
 
+def create_root_dirs(root, dirs):
+    for d in dirs:
+        os.makedirs(root + '/' + d)
+
+
 def main():
     config = configure()
     download_stage3()
     unpack_stage3(config['path_to_install'])
+    create_root_dirs(config['path_to_install'], ['youtube', 'music', 'video', 'movie', 'torrent', 'work'])
+
     chroot(config['path_to_install'])
 
     update_portage()
