@@ -12,6 +12,7 @@ import shutil
 import sys
 
 import fstab
+import kde
 import locale
 import make
 import network
