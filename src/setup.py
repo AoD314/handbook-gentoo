@@ -11,6 +11,7 @@ import shutil
 import sys
 
 import fstab
+import kde
 import locale
 import make
 import network
@@ -59,7 +60,7 @@ def configure():
     # config['root_password'] = root_password
     # config['username'] = user_name
     # config['email'] = email
-    config['path_to_install'] = get_answer(['path to gentoo install'])[0]
+    config['path_to_install'] = '/mnt/gentoo' #get_answer(['path to gentoo install'])[0]
 
     return config
 
