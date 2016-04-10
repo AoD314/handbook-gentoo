@@ -33,7 +33,7 @@ def run_command(cmd):
     
 
 def print_log(msg):
-    print(msg, end='')
+    print(msg)
     sys.stdout.flush()
     with open('/tmp/gentoo_install.log', 'a') as f:
         f.write(str(datetime.now()) + ": " + str(msg))
