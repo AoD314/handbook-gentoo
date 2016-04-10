@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-from download import download_stage3
 from ask import get_answer
-from general import Dir
-from general import run_command
+from download import download_stage3
+from general import Dir, run_command, print_log
 
 import os
 import re
@@ -12,7 +11,6 @@ import shutil
 import sys
 
 import fstab
-import kde
 import locale
 import make
 import network
@@ -26,26 +24,22 @@ def unpack_stage3(path_to_install):
     path_to_stage3 = '/tmp/stage3-amd64-latest.tar.bz2'
     cmd = 'tar xvjpf ' + path_to_stage3
 
+    print_log('chdir ' + path_to_install)
     os.chdir(path_to_install)
 
-    print('cleaning ... ', end='')
-    sys.stdout.flush()
+    print_log('cleaning ... ')
+    print_log('[rm -rf *]')
     os.system('rm -rf *')
-    print('done')
+    print_log('done')
 
-    print('installing ... ', end='')
-    sys.stdout.flush()
+    print_log('installing ... ')
 
     status, msg = subprocess.getstatusoutput(cmd)
-    msg = msg.split('\n')
-    filtered_msg = [l for l in msg if re.match('^tar', l)]
-    if status != 0:
-        print('\nerror: ', status)
-        print('message:\n', '\n'.join(filtered_msg))
-    else:
-        print('done')
+    print_log(msg)
+    print_log('status ' + str(status))
 
     path = Dir(path_to_install)
+    print_log('cp /etc/resolv.conf ' + path.full('etc/resolv.conf'))
     shutil.copy2('/etc/resolv.conf', path.full('etc/resolv.conf'))
 
 
@@ -59,20 +53,13 @@ def update_portage():
 def configure():
     config = {}
 
-    user_name, email, login, password, root_password = get_answer(['user name', 'email', 'login', 'password', 'root password'])
-    config['login'] = login
-    config['password'] = password
-    config['root_password'] = root_password
-    config['username'] = user_name
-    config['email'] = email
+    # user_name, email, login, password, root_password = get_answer(['user name', 'email', 'login', 'password', 'root password'])
+    # config['login'] = login
+    # config['password'] = password
+    # config['root_password'] = root_password
+    # config['username'] = user_name
+    # config['email'] = email
     config['path_to_install'] = get_answer(['path to gentoo install'])[0]
-
-    # config['login'] = 'user'
-    # config['password'] = '123'
-    # config['root_password'] = '123'
-    # config['username'] = 'User User'
-    # config['email'] = 'user@e-mail.com'
-    # config['path_to_install'] = '/mnt/gentoo'
 
     return config
 
@@ -106,31 +93,22 @@ def chroot(path_to_install):
 
 
 def change_password(root_password):
-    print('*' * 120)
-    print("Please change root password !!!!!")
-    print('*' * 120)
+    print("changing password ... ")
     passwd = subprocess.Popen(['passwd'], stdin=subprocess.PIPE, stdout=open('/dev/null', 'w').fileno(), stderr=subprocess.STDOUT)
     passwd.communicate(str(root_password).encode('utf-8'))
     print("result: " + str(passwd.returncode))
-
-
-def create_root_dirs(root, dirs):
-    for d in dirs:
-        os.makedirs(root + '/' + d)
 
 
 def main():
     config = configure()
     download_stage3()
     unpack_stage3(config['path_to_install'])
-    create_root_dirs(config['path_to_install'], ['youtube', 'music', 'video', 'movie', 'torrent', 'work'])
-
     chroot(config['path_to_install'])
 
     update_portage()
     apply_config_files()
 
-    change_password(config['root_password'])
+    change_password('123')
 
 
 if __name__ == "__main__":

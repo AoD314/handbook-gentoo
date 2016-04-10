@@ -1,9 +1,7 @@
 
-import os
-# import subprocess
-# import sys
-
+from datetime import datetime
 from pathlib import Path
+import os
 
 
 def create_dir(dir_name):
@@ -25,30 +23,18 @@ def create_file(file_name):
 
 
 def run_command(cmd):
-    #os.system(cmd)
-    print('_' * 120)
-    print(cmd)
-    print('_' * 120)
-    os.system(cmd)
-    print('_' * 120)
-    #(status, output) = subprocess.getstatusoutput(cmd)
-    #print(output)
+    print_log(cmd)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    for line in p.stdout.readlines():
+        print_log(line)
+    print_log('status '+ str(p.wait()))
+    
 
-    #proc = subprocess.Popen(cmd.split(' '), stdout=subprocess.PIPE)
-    #line = ' '
-    #while True:
-    #    line = proc.stdout.readline()
-    #    if not line: break
-    #    line = line.decode('utf-8').strip()
-    #    print(line.encode('utf-8'))
-
-    #status = proc.returncode
-    #print('\n----> (status: ' + str(status) + ')')
-    #print('\n\n')
-
-
-def configure_print(name):
-    print('configure {:.>25s}'.format(name))
+def print_log(msg):
+    print(msg, end='')
+    sys.stdout.flush()
+    with open('/tmp/gentoo_install.log', a) as f:
+        f.write(str(datetime.now()) + ": " + str(msg))
 
 
 class Dir():

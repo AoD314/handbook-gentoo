@@ -1,4 +1,4 @@
-from general import create_file, run_command
+from general import create_file, run_command, print_log
 
 
 def configure():

@@ -1,6 +1,6 @@
 import os
+import general import run_command
 
 
 def configure():
-    print('configure alsa + pulseaudio')
-    os.system('emerge -1v media-sound/pulseaudio media-plugins/alsa-plugins')
+    run_command('emerge -1v media-sound/pulseaudio media-plugins/alsa-plugins')

@@ -3,11 +3,13 @@ import os
 import re
 import requests
 import time
+from general import print_log
 
 
 def download_file_from_internet(path_from_internet, path_to_disk):
     if not os.path.exists(path_to_disk) or os.path.getsize(path_to_disk) < 314:
         try:
+            print_log('downloading ' + str(path_from_internet) + ' -> ' + str(path_to_disk))
             with open(path_to_disk, 'wb') as handle:
                 t = time.time()
 
