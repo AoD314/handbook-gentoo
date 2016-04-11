@@ -56,7 +56,7 @@ restrict [::1]
 
     with create_file('/etc/profile.d/xdg_cache_home.sh') as f:
         print("""
-export XDG_CACHE-HOME="/tmp/${USER}/.cache"
+export XDG_CACHE_HOME="/tmp/${USER}/.cache"
 """, file=f)
 
     with create_file('/etc/env.d/02locale') as f:
