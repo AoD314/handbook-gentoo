@@ -72,8 +72,8 @@ def apply_config_files():
     profile.configure()
     timezone.configure()
     network.configure()
-    locale.configure()
     fstab.configure()
+    locale.configure()
 
     # install X11
     kde.configure()
