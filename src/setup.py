@@ -79,8 +79,8 @@ def apply_config_files():
     kde.configure()
 
     # install last
-    run_command('emerge -1v sys-kernel/gentoo-sources sys-boot/grub')
-    run_command('emerge -1v app-admin/syslog-ng sys-process/cronie app-editors/vim app-portage/genlop sys-process/htop')
+    #run_command('emerge -1v sys-kernel/gentoo-sources sys-boot/grub')
+    #run_command('emerge -1v app-admin/syslog-ng sys-process/cronie app-editors/vim app-portage/genlop sys-process/htop')
 
 
 def chroot(path_to_install):

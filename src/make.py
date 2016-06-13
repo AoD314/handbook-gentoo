@@ -20,17 +20,17 @@ PYTHON_SINGLE_TARGET="python2_7"
 USE_PYTHON="2.7"
 
 ACCEPT_LICENSE="*"
-CFLAGS="-O2 -pipe -march=native"
+CFLAGS="-O3 -pipe -march=native"
 CXXFLAGS="${{CFLAGS}}"
 
-VIDEO_CARDS="nvidia"
+#VIDEO_CARDS="nvidia"
 INPUT_DEVICES="keyboard mouse" # virtualbox
 
 CHOST="x86_64-pc-linux-gnu"
 
 USE="threads policykit consolekit utf8 ipv6"
 
-USE="${{USE}} qt4 -gtk -gtk3 wayland egl gles gles2 opengl opencl"
+USE="${{USE}} qt4 -qt5 -gtk -gtk3 wayland egl gles gles2 opengl opencl"
 USE="${{USE}} ffmpeg -libav -vlc "
 USE="${{USE}} udev evdev -systemd "
 USE="${{USE}} -java -ruby "
@@ -48,7 +48,7 @@ PKGDIR="${{PORTDIR}}/packages"
 #PORTDIR_OVERLAY="/usr/local/portage"
 
 MAKEOPTS="-j{}"
-EMERGE_DEFAULT_OPTS="--jobs=2 --keep-going=y "
+EMERGE_DEFAULT_OPTS="--jobs=4 --keep-going=y "
 
 #source /var/lib/layman/make.conf
 """.format(cpu.get_flags(), cpu.get_num_cores() + 1)
