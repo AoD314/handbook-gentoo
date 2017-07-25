@@ -15,6 +15,38 @@ def configure(config):
 
 PS1='\[\e[1;32m\]\u \[\e[0;31m\] [\[\e[1;34m\]\w \[\e[1;32m\]$(__git_ps1 "(%s)")\[\e[0;31m\]] \[\e[1;37m\]{\t}\n\$ '
 
+function extract {
+ if [ -z "$1" ]; then
+    # display usage if no parameters given
+    echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
+ else
+    if [ -f "$1" ] ; then
+        NAME=${1%.*}
+        #mkdir $NAME && cd $NAME
+        case "$1" in
+          *.tar.bz2)   tar xvjf ./"$1"    ;;  
+          *.tar.gz)    tar xvzf ./"$1"    ;;  
+          *.tar.xz)    tar xvJf ./"$1"    ;;  
+          *.lzma)      unlzma ./"$1"      ;;  
+          *.bz2)       bunzip2 ./"$1"     ;;  
+          *.rar)       unrar x -ad ./"$1" ;;
+          *.gz)        gunzip ./"$1"      ;;  
+          *.tar)       tar xvf ./"$1"     ;;  
+          *.tbz2)      tar xvjf ./"$1"    ;;  
+          *.tgz)       tar xvzf ./"$1"    ;;  
+          *.zip)       unzip ./"$1"       ;;  
+          *.Z)         uncompress ./"$1"  ;;  
+          *.7z)        7z x ./"$1"        ;;  
+          *.xz)        unxz ./"$1"        ;;  
+          *.exe)       cabextract ./"$1"  ;;  
+          *)           echo "extract: '$1' - unknown archive method" ;;
+        esac
+    else
+        echo "'$1' - file does not exist"
+    fi  
+fi
+}
+
 shopt -s histappend
 PROMPT_COMMAND='history -a'
 shopt -s cdspell
@@ -37,7 +69,7 @@ alias news="ls -lsaht | head -n 25"
 alias hotm="ps -A -o rssize:10,time:9,%cpu:5,cmd | sort -nr | head | awk '{ printf \"%7.1f M  --- %s\n\", \$1/1024, \$4}{};'"
 alias hotc="ps -A -o rssize:10,time:9,%cpu:5,cmd --sort -%cpu | head -n 13 | awk '{ printf \"%6.1f%% --- %s\n\", \$3, \$4}{};' | tail -n 12"
 
-alias m="make -j5"
+alias m="make -j9"
 alias n="ninja"
 alias sl="sublime_text"
 
