@@ -10,8 +10,8 @@ def configure(config):
 
     with create_file(Path(path_to_mpv_dir, '.gitconfig')) as f:
         print("""[user]
-    name = Andrey Morozov
-    email = andrey.morozov@itseez.com
+name = Andrey Morozov
+email = morozov.andrey.vmk@gmail.com
 
 [core]
     editor = vim
@@ -19,18 +19,15 @@ def configure(config):
 
 [alias]
     s = status
-    sb = status -s -b
-    sl = stash list
     d = diff
-    l = log -n 1024 HEAD --graph --pretty=format:'%C(red)%h%C(yellow)%d%Creset %s %C(white) [%C(green)%an:%Creset %ar]'
-    ll = log -n 1024 HEAD --graph  --decorate --stat --abbrev-commit
-    lll = log -n 1024 HEAD --graph  --decorate --stat --abbrev-commit -p
-    all = log --graph --branches --decorate --stat --all --abbrev-commit
-    alll = log --graph --branches --decorate --stat --all --abbrev-commit -p
+    c = commit
+    l = log --graph --pretty=format:'%C(red)%h%C(yellow)%d%Creset %s %C(white) [%C(green)%an:%Creset %ar]'
+    ll = log --graph --branches --decorate --stat --all --abbrev-commit
+    lll = log --graph --branches --decorate --stat --all --abbrev-commit -p
     co = checkout
-    b = branch -vv
-    ba = branch -a -vv
-    up = fetch --all --prune
+    b = branch -vv 
+    ba = branch -a -vv 
+    up = fetch --all --prune --recurse-submodules=yes -j4 --progress
     report = shortlog --all --branches --no-merges -n --since=7.days.ago
     wd = show --stat -p # whatdiff
 
