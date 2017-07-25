@@ -9,7 +9,7 @@ def configure(config):
     configure_print('mpv')
     path_to_mpv_dir = Path(config['path_to_root'], 'home', config['user_name'], '.config', 'mpv')
 
-    with create_file(Path(path_to_mpv_dir, 'config')) as f:
+    with create_file(Path(path_to_mpv_dir, 'mpv.conf')) as f:
         print("""##############################################################
 # https://github.com/mpv-player/mpv/blob/master/DOCS/man/en/ #
 ##############################################################
