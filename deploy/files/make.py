@@ -13,10 +13,10 @@ def get_sse_support():
 
 def get_python_support():
     return """
-PYTHON_TARGETS="python2_7 python3_4"
+PYTHON_TARGETS="python2_7 python3_5 python3_6"
 PYTHON_SINGLE_TARGET="python2_7"
 USE_PYTHON="2.7"
-PYTHON_ABIS="2.7 3.4"
+PYTHON_ABIS="2.7 3.5 3.6"
 """
 
 
@@ -30,7 +30,7 @@ def configure(configuration):
         py = get_python_support()
         cmd = sse + '\n\n' + '\n\n' + py + """
 ACCEPT_LICENSE="*"
-CFLAGS="-O2 -pipe -march=native"
+CFLAGS="-O3 -pipe -march=native"
 CXXFLAGS="${CFLAGS}"
 
 VIDEO_CARDS="nvidia"
@@ -38,33 +38,29 @@ INPUT_DEVICES="keyboard mouse" # virtualbox
 
 CHOST="x86_64-pc-linux-gnu"
 
-USE="nls theora gmp posix usb png threads \
-     policykit consolekit utf8 \
-     ipv6 lm_sensors -introspection"
+USE="threads policykit consolekit utf8 ipv6"
 
-USE="${USE} qt4 qt5 -gtk -gtk3 -wayland egl gles opengl "
+USE="${USE} qt4 -qt5 -gtk -gtk3 wayland egl gles gles2 opengl opencl"
 USE="${USE} ffmpeg -libav -vlc "
-USE="${USE} ogg xvid x264 webm vdpau flac "
-USE="${USE} udev -systemd -eudev "
+USE="${USE} udev evdev -systemd "
 USE="${USE} -java -ruby "
-USE="${USE} -sqlite -mysql "
+USE="${USE} -sqlite -mysql postgres "
 USE="${USE} -pam -semantic-desktop "
-USE="${USE} -pulseaudio alsa "
+USE="${USE} pulseaudio alsa "
 
 ALSA_CARDS="ca0106 hda-intel"
-
-CHOST="x86_64-pc-linux-gnu"
 
 PORTDIR="/usr/portage"
 DISTDIR="${PORTDIR}/distfiles"
 PKGDIR="${PORTDIR}/packages"
+
 MAKEOPTS="-j{0}"
 EMERGE_DEFAULT_OPTS="--jobs=2 --keep-going=y "
 PORTAGE_TMPDIR=/tmp
-PORTDIR_OVERLAY="/usr/local/portage"
+#PORTDIR_OVERLAY="/usr/local/portage"
 
 source /var/lib/layman/make.conf
-""".format(multiprocessing.cpu_count() + 1)
+""".format(multiprocessing.cpu_count())
         print(cmd, file=f)
 
 
