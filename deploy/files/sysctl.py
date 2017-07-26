@@ -20,9 +20,9 @@ vm.dirty_background_bytes = 50331648
 net.core.rmem_default = 262144
 net.core.wmem_default = 262144
 
-# Устанавливаем в 8Мб максимальный размер буфера сокетов.
-net.core.rmem_max = 8388608
-net.core.wmem_max = 8388608
+# Устанавливаем в 16Мб максимальный размер буфера сокетов.
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
 
 # максимальное кол-во соединений
 net.ipv4.tcp_max_orphans = 65536
@@ -38,11 +38,6 @@ net.ipv4.tcp_fin_timeout = 10
 
 # Максимальный размер очереди 
 net.core.netdev_max_backlog = 2048
-
-net.core.rmem_default = 65536
-net.core.wmem_default = 65536
-net.core.rmem_max = 16777216
-net.core.wmem_max = 16777216
 
 vm.swappiness=0
 """, file=f)
