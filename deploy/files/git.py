@@ -30,6 +30,7 @@ email = morozov.andrey.vmk@gmail.com
     ba = branch -a -vv 
     up = fetch --all --prune --recurse-submodules=yes -j4 --progress
     report = shortlog --all --branches --no-merges -n --since=7.days.ago
+    uncommit = reset HEAD~
     wd = show --stat -p # whatdiff
 
 [color]
