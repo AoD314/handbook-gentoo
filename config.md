@@ -13,6 +13,15 @@ endif
 # BASH
 
 ```
+alias l="ls -lh"
+alias lS="ls -lSh"
+alias ll="ls -lah"
+alias bigs="ls -Shal | head -n 25"
+alias news="ls -lsaht | head -n 25"
+alias hotm="ps -A -o rssize:10,time:9,%cpu:5,cmd | sort -nr | head | awk '{ printf \"%7.1f M  --- %s\n\", \$1/1024, \$4}{};'"
+alias hotc="ps -A -o rssize:10,time:9,%cpu:5,cmd --sort -%cpu | head -n 13 | awk '{ printf \"%6.1f%% --- %s\n\", \$3, \$4}{};' | tail -n 12"
+alias hddfree="du -h --max-depth=1 | sort -h"
+
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 ```
