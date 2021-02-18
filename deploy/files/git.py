@@ -14,9 +14,9 @@ name = Andrey Morozov
 email = morozov.andrey.vmk@gmail.com
 
 [core]
+    autocrlf = input
     editor = vim
     whitespace = -indent-with-non-tab,-space-before-tab,-trailing-space,-cr-at-eol
-    autocrlf = true
 
 [alias]
     s = status
