@@ -18,6 +18,9 @@ email = morozov.andrey.vmk@gmail.com
     editor = vim
     whitespace = -indent-with-non-tab,-space-before-tab,-trailing-space,-cr-at-eol
 
+[submodule]
+    recurse = true
+
 [alias]
     s = status
     d = diff
