@@ -11,7 +11,7 @@ def configure(config):
     with create_file(Path(path_to_mpv_dir, '.gitconfig')) as f:
         print("""[user]
 name = Andrey Morozov
-email = morozov.andrey.vmk@gmail.com
+email = email@gmail.com
 
 [core]
     autocrlf = input
