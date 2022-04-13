@@ -31,7 +31,7 @@ email = morozov.andrey.vmk@gmail.com
     co = checkout
     b = branch -vv 
     ba = branch -a -vv 
-    up = fetch --all --prune --prune-tags --tags --recurse-submodules=yes -j8 --progress
+    up = fetch --all --prune --prune-tags --tags -f --recurse-submodules=yes -j8 --progress
     report = shortlog --all --branches --no-merges -n --since=7.days.ago
     uncommit = reset HEAD~
     wd = show --stat -p # whatdiff
