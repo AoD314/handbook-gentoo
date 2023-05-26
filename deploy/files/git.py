@@ -66,6 +66,9 @@ email = email@gmail.com
 [filter "tabspace"]
     smudge = unexpand --tabs=4 --first-only
     clean = expand --tabs=4 --initial
+
+[pager]
+    branch = false
 """, file=f)
 
 
