@@ -15,6 +15,7 @@ net.ipv4.conf.all.rp_filter = 1
 
 vm.dirty_bytes = 67108864
 vm.dirty_background_bytes = 50331648
+vm.max_map_count = 1048576 
 
 # Устанавливаем в 256 Кб размер буферов по умолчанию для приема и отправки данных через сокеты
 net.core.rmem_default = 262144
